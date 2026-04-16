@@ -1,0 +1,1004 @@
+{
+  "info": {
+    "name": "QLTB - Giai doan 3 - Danh muc dung chung",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "id",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_dang_nhap\": \"admin\",\n  \"mat_khau\": \"12345678\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Loai Thiet Bi",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/loai-thiet-bi?page=1&limit=20&keyword=&isActive=1&sortBy=created_at&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/loai-thiet-bi/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_loai\": \"MAY_CHIEU\",\n  \"ma_viet_tat\": \"MC\",\n  \"ten_loai\": \"May chieu\",\n  \"mo_ta\": \"Thiet bi trinh chieu trong phong hoc\"\n}"
+            },
+            "url": "{{baseUrl}}/loai-thiet-bi"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_loai\": \"May chieu cap nhat\",\n  \"mo_ta\": \"Mo ta da cap nhat\"\n}"
+            },
+            "url": "{{baseUrl}}/loai-thiet-bi/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/loai-thiet-bi/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hang San Xuat",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/hang-san-xuat?page=1&limit=20&keyword=&isActive=1&sortBy=created_at&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/hang-san-xuat/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_hang\": \"EPSON\",\n  \"ten_hang\": \"Epson\",\n  \"quoc_gia\": \"Nhat Ban\",\n  \"website\": \"https://epson.com\",\n  \"ghi_chu\": \"Hang may chieu pho bien\"\n}"
+            },
+            "url": "{{baseUrl}}/hang-san-xuat"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_hang\": \"Epson Updated\",\n  \"ghi_chu\": \"Da cap nhat\"\n}"
+            },
+            "url": "{{baseUrl}}/hang-san-xuat/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/hang-san-xuat/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nha Cung Cap",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/nha-cung-cap?page=1&limit=20&keyword=&isActive=1&sortBy=created_at&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/nha-cung-cap/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_ncc\": \"NCC001\",\n  \"ten_ncc\": \"Cong ty Thiet bi Giao duc ABC\",\n  \"nguoi_lien_he\": \"Nguyen Van B\",\n  \"so_dien_thoai\": \"0912345678\",\n  \"email\": \"contact@abc.com\",\n  \"dia_chi\": \"Ha Noi\",\n  \"ma_so_thue\": \"0101234567\",\n  \"ghi_chu\": \"Nha cung cap thiet bi\"\n}"
+            },
+            "url": "{{baseUrl}}/nha-cung-cap"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_ncc\": \"Cong ty Thiet bi Giao duc ABC Updated\",\n  \"ghi_chu\": \"Da cap nhat\"\n}"
+            },
+            "url": "{{baseUrl}}/nha-cung-cap/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/nha-cung-cap/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trang Thai Thiet Bi",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/trang-thai-thiet-bi?page=1&limit=20&keyword=&isActive=1&sortBy=thu_tu_hien_thi&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/trang-thai-thiet-bi/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_trang_thai\": \"LUU_KHO\",\n  \"ten_trang_thai\": \"Luu kho\",\n  \"is_terminal\": false,\n  \"mo_ta\": \"Thiet bi dang o kho\",\n  \"thu_tu_hien_thi\": 2\n}"
+            },
+            "url": "{{baseUrl}}/trang-thai-thiet-bi"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_trang_thai\": \"Luu kho cap nhat\",\n  \"thu_tu_hien_thi\": 3\n}"
+            },
+            "url": "{{baseUrl}}/trang-thai-thiet-bi/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/trang-thai-thiet-bi/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Muc Do Uu Tien",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/muc-do-uu-tien?page=1&limit=20&keyword=&isActive=1&sortBy=muc_do_so&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/muc-do-uu-tien/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_muc_do\": \"KHAN_CAP\",\n  \"ten_muc_do\": \"Khan cap\",\n  \"muc_do_so\": 4,\n  \"mo_ta\": \"Can xu ly ngay\"\n}"
+            },
+            "url": "{{baseUrl}}/muc-do-uu-tien"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_muc_do\": \"Khan cap updated\",\n  \"muc_do_so\": 5\n}"
+            },
+            "url": "{{baseUrl}}/muc-do-uu-tien/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/muc-do-uu-tien/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ly Do Thanh Ly",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/ly-do-thanh-ly?page=1&limit=20&keyword=&isActive=1&sortBy=ly_do_thanh_ly_id&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/ly-do-thanh-ly/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_ly_do\": \"LAC_HAU\",\n  \"ten_ly_do\": \"Lac hau khong con phu hop\",\n  \"mo_ta\": \"Thiet bi da cu\"\n}"
+            },
+            "url": "{{baseUrl}}/ly-do-thanh-ly"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_ly_do\": \"Lac hau updated\",\n  \"mo_ta\": \"Da cap nhat mo ta\"\n}"
+            },
+            "url": "{{baseUrl}}/ly-do-thanh-ly/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/ly-do-thanh-ly/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tinh Trang Kiem Ke",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/tinh-trang-kiem-ke?page=1&limit=20&keyword=&isActive=1&sortBy=tinh_trang_kiem_ke_id&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/tinh-trang-kiem-ke/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_tinh_trang\": \"SAI_VI_TRI\",\n  \"ten_tinh_trang\": \"Sai vi tri\",\n  \"mo_ta\": \"Thiet bi khong o dung don vi\"\n}"
+            },
+            "url": "{{baseUrl}}/tinh-trang-kiem-ke"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_tinh_trang\": \"Sai vi tri updated\",\n  \"mo_ta\": \"Da cap nhat\"\n}"
+            },
+            "url": "{{baseUrl}}/tinh-trang-kiem-ke/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/tinh-trang-kiem-ke/{{id}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Don Vi Sua Chua",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/don-vi-sua-chua?page=1&limit=20&keyword=&isActive=1&sortBy=created_at&sortOrder=DESC"
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/don-vi-sua-chua/{{id}}"
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ma_dvsc\": \"DVSC001\",\n  \"ten_dvsc\": \"Trung tam bao tri XYZ\",\n  \"nguoi_lien_he\": \"Tran Van C\",\n  \"so_dien_thoai\": \"0988888888\",\n  \"email\": \"support@xyz.com\",\n  \"dia_chi\": \"Ha Noi\",\n  \"ghi_chu\": \"Don vi sua chua ben ngoai\"\n}"
+            },
+            "url": "{{baseUrl}}/don-vi-sua-chua"
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ten_dvsc\": \"Trung tam bao tri XYZ Updated\",\n  \"ghi_chu\": \"Da cap nhat\"\n}"
+            },
+            "url": "{{baseUrl}}/don-vi-sua-chua/{{id}}"
+          }
+        },
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 0\n}"
+            },
+            "url": "{{baseUrl}}/don-vi-sua-chua/{{id}}/status"
+          }
+        }
+      ]
+    }
+  ]
+}

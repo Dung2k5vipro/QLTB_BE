@@ -1,0 +1,50 @@
+const { createMasterDataRepository } = require('./masterData.repositoryFactory');
+
+module.exports = createMasterDataRepository({
+  tableName: 'trang_thai_thiet_bi',
+  idField: 'trang_thai_thiet_bi_id',
+  searchableFields: ['ma_trang_thai', 'ten_trang_thai', 'mo_ta'],
+  listFields: [
+    'trang_thai_thiet_bi_id',
+    'ma_trang_thai',
+    'ten_trang_thai',
+    'is_terminal',
+    'mo_ta',
+    'thu_tu_hien_thi',
+    'is_active',
+  ],
+  detailFields: [
+    'trang_thai_thiet_bi_id',
+    'ma_trang_thai',
+    'ten_trang_thai',
+    'is_terminal',
+    'mo_ta',
+    'thu_tu_hien_thi',
+    'is_active',
+  ],
+  insertFields: [
+    'ma_trang_thai',
+    'ten_trang_thai',
+    'is_terminal',
+    'mo_ta',
+    'thu_tu_hien_thi',
+    'is_active',
+  ],
+  updateFields: [
+    'ma_trang_thai',
+    'ten_trang_thai',
+    'is_terminal',
+    'mo_ta',
+    'thu_tu_hien_thi',
+  ],
+  uniqueFields: ['ma_trang_thai'],
+  sortColumnMap: {
+    trang_thai_thiet_bi_id: 'trang_thai_thiet_bi_id',
+    ma_trang_thai: 'ma_trang_thai',
+    ten_trang_thai: 'ten_trang_thai',
+    thu_tu_hien_thi: 'thu_tu_hien_thi',
+  },
+  defaultSortBy: 'thu_tu_hien_thi',
+  hasUpdatedAt: false,
+  hasIsActive: true,
+});

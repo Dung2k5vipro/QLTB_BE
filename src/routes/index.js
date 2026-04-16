@@ -1,0 +1,45 @@
+const express = require('express');
+
+const healthRoute = require('./health.route');
+const authRoute = require('./auth.route');
+const roleRoute = require('./role.route');
+const userRoute = require('./user.route');
+const thietBiRoute = require('./thiet-bi.route');
+const loaiThietBiRoute = require('./loai-thiet-bi.route');
+const hangSanXuatRoute = require('./hang-san-xuat.route');
+const nhaCungCapRoute = require('./nha-cung-cap.route');
+const trangThaiThietBiRoute = require('./trang-thai-thiet-bi.route');
+const mucDoUuTienRoute = require('./muc-do-uu-tien.route');
+const lyDoThanhLyRoute = require('./ly-do-thanh-ly.route');
+const tinhTrangKiemKeRoute = require('./tinh-trang-kiem-ke.route');
+const donViSuaChuaRoute = require('./don-vi-sua-chua.route');
+const thanhLyRoute = require('./thanh-ly.route');
+const kiemKeRoute = require('./kiem-ke.route');
+const donViRoute = require('./don-vi.route');
+const baoTriRoute = require('./bao-tri.route');
+const baoHongRoute = require('./bao-hong.route');
+const dashboardRoute = require('./dashboard.route');
+
+const router = express.Router();
+
+router.use('/health', healthRoute);
+router.use('/auth', authRoute);
+router.use('/roles', roleRoute);
+router.use('/users', userRoute);
+router.use('/thiet-bi', thietBiRoute);
+router.use('/loai-thiet-bi', loaiThietBiRoute);
+router.use('/hang-san-xuat', hangSanXuatRoute);
+router.use('/nha-cung-cap', nhaCungCapRoute);
+router.use('/trang-thai-thiet-bi', trangThaiThietBiRoute);
+router.use('/muc-do-uu-tien', mucDoUuTienRoute);
+router.use('/ly-do-thanh-ly', lyDoThanhLyRoute);
+router.use('/tinh-trang-kiem-ke', tinhTrangKiemKeRoute);
+router.use('/don-vi-sua-chua', donViSuaChuaRoute);
+router.use('/thanh-ly', thanhLyRoute);
+router.use('/kiem-ke', kiemKeRoute);
+router.use('/don-vi', donViRoute);
+router.use('/bao-tri', baoTriRoute);
+router.use('/bao-hong', baoHongRoute);
+router.use('/dashboard', dashboardRoute);
+
+module.exports = router;
