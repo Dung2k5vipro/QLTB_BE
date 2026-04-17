@@ -28,3 +28,4 @@ router.get('/db', async (_req, res, next) => {
 });
 
 module.exports = router;
+

@@ -34,7 +34,7 @@ const toPublicUser = (user) => ({
 const ensureUserExists = async (nguoiDungId) => {
   const user = await userRepository.findById(nguoiDungId);
   if (!user) {
-    throw new AppError('Khong tim thay nguoi dung', 404);
+    throw new AppError('Kh?ng t?m th?y ng??i d?ng', 404);
   }
 
   return user;
@@ -43,7 +43,7 @@ const ensureUserExists = async (nguoiDungId) => {
 const ensureRoleExists = async (vaiTroId) => {
   const role = await roleRepository.findById(vaiTroId);
   if (!role) {
-    throw new AppError('vai_tro_id khong ton tai', 400);
+    throw new AppError('vai_tro_id kh?ng t?n t?i', 400);
   }
 
   return role;
@@ -54,7 +54,7 @@ const ensureDonViExists = async (donViId) => {
 
   const donVi = await donViRepository.findById(donViId);
   if (!donVi) {
-    throw new AppError('don_vi_id khong ton tai', 400);
+    throw new AppError('don_vi_id kh?ng t?n t?i', 400);
   }
 
   return donVi;
@@ -64,21 +64,21 @@ const ensureUniqueUserFields = async (payload, excludeUserId = null) => {
   if (payload.ten_dang_nhap) {
     const usernameExists = await userRepository.existsByUsername(payload.ten_dang_nhap, excludeUserId);
     if (usernameExists) {
-      throw new AppError('ten_dang_nhap da ton tai', 409);
+      throw new AppError('ten_dang_nhap ?? t?n t?i', 409);
     }
   }
 
   if (Object.prototype.hasOwnProperty.call(payload, 'email') && payload.email) {
     const emailExists = await userRepository.existsByEmail(payload.email, excludeUserId);
     if (emailExists) {
-      throw new AppError('email da ton tai', 409);
+      throw new AppError('email ?? t?n t?i', 409);
     }
   }
 
   if (Object.prototype.hasOwnProperty.call(payload, 'so_dien_thoai') && payload.so_dien_thoai) {
     const phoneExists = await userRepository.existsByPhone(payload.so_dien_thoai, excludeUserId);
     if (phoneExists) {
-      throw new AppError('so_dien_thoai da ton tai', 409);
+      throw new AppError('so_dien_thoai ?? t?n t?i', 409);
     }
   }
 };
@@ -106,7 +106,7 @@ const ensureNotDisableLastActiveAdmin = async ({ targetUser, nextRoleName, nextS
 
   const otherActiveAdmins = await userRepository.countActiveAdminsExcludingUser(targetUser.nguoi_dung_id);
   if (otherActiveAdmins <= 0) {
-    throw new AppError('Khong the vo hieu hoa admin active cuoi cung', 400);
+    throw new AppError('Kh?ng th? v? hi?u h?a admin active cu?i c?ng', 400);
   }
 };
 
@@ -131,7 +131,7 @@ const updateMyProfile = async (nguoiDungId, payload, context = {}) => {
     entity_id: nguoiDungId,
     du_lieu_cu: toPublicUser(currentUser),
     du_lieu_moi: toPublicUser(updatedUser),
-    ghi_chu: 'Cap nhat ho so ca nhan',
+    ghi_chu: 'C?p nh?t h? s? c? nh?n',
     ip_address: context.ipAddress,
   });
 
@@ -176,7 +176,7 @@ const createUser = async (actor, payload, context = {}) => {
     entity_name: 'nguoi_dung',
     entity_id: insertedId,
     du_lieu_moi: toPublicUser(createdUser),
-    ghi_chu: `Admin tao tai khoan ${createdUser.ten_dang_nhap}`,
+    ghi_chu: `Admin tao t?i kho?n ${createdUser.ten_dang_nhap}`,
     ip_address: context.ipAddress,
   });
 
@@ -225,7 +225,7 @@ const updateUser = async (actor, nguoiDungId, payload, context = {}) => {
     entity_id: nguoiDungId,
     du_lieu_cu: toPublicUser(currentUser),
     du_lieu_moi: toPublicUser(updatedUser),
-    ghi_chu: `Admin cap nhat tai khoan ${updatedUser.ten_dang_nhap}`,
+    ghi_chu: `Admin cap nhat t?i kho?n ${updatedUser.ten_dang_nhap}`,
     ip_address: context.ipAddress,
   });
 
@@ -256,7 +256,7 @@ const updateUserStatus = async (actor, nguoiDungId, payload, context = {}) => {
       trang_thai_tai_khoan: updatedUser.trang_thai_tai_khoan,
       ly_do: payload.ly_do || null,
     },
-    ghi_chu: payload.ly_do || 'Cap nhat trang thai tai khoan',
+    ghi_chu: payload.ly_do || 'C?p nh?t tr?ng th?i t?i kho?n',
     ip_address: context.ipAddress,
   });
 
@@ -266,12 +266,12 @@ const updateUserStatus = async (actor, nguoiDungId, payload, context = {}) => {
 const resetUserPassword = async (actor, nguoiDungId, payload, context = {}) => {
   const targetUser = await userRepository.findAuthById(nguoiDungId);
   if (!targetUser) {
-    throw new AppError('Khong tim thay nguoi dung', 404);
+    throw new AppError('Kh?ng t?m th?y ng??i d?ng', 404);
   }
 
   const isSamePassword = await bcrypt.compare(payload.mat_khau_moi, targetUser.mat_khau_hash || '');
   if (isSamePassword) {
-    throw new AppError('mat_khau_moi khong duoc trung voi mat_khau hien tai', 400);
+    throw new AppError('mat_khau_moi kh?ng ???c tr?ng v?i mat_khau hi?n t?i', 400);
   }
 
   const passwordHash = await bcrypt.hash(payload.mat_khau_moi, SALT_ROUNDS);
@@ -283,12 +283,12 @@ const resetUserPassword = async (actor, nguoiDungId, payload, context = {}) => {
     hanh_dong: 'RESET_PASSWORD',
     entity_name: 'nguoi_dung',
     entity_id: nguoiDungId,
-    ghi_chu: `Admin reset mat khau cho tai khoan ${targetUser.ten_dang_nhap}`,
+    ghi_chu: `Admin reset m?t kh?u cho t?i kho?n ${targetUser.ten_dang_nhap}`,
     ip_address: context.ipAddress,
   });
 
   return {
-    message: 'Reset mat khau thanh cong',
+    message: 'Reset m?t kh?u th?nh c?ng',
   };
 };
 
@@ -302,3 +302,5 @@ module.exports = {
   updateUserStatus,
   resetUserPassword,
 };
+
+

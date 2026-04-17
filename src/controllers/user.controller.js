@@ -7,7 +7,7 @@ const getMyProfile = asyncHandler(async (req, res) => {
   const profile = await userService.getMyProfile(req.user.nguoi_dung_id);
 
   return sendSuccess(res, {
-    message: 'Lay ho so thanh cong',
+    message: 'L?y h? s? th?nh c?ng',
     data: profile,
   });
 });
@@ -18,7 +18,7 @@ const updateMyProfile = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Cap nhat ho so thanh cong',
+    message: 'C?p nh?t h? s? th?nh c?ng',
     data: profile,
   });
 });
@@ -27,7 +27,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const result = await userService.getUsers(req.query);
 
   return sendSuccess(res, {
-    message: 'Lay danh sach tai khoan thanh cong',
+    message: 'L?y danh s?ch t?i kho?n th?nh c?ng',
     data: result.items,
     meta: result.pagination,
   });
@@ -40,7 +40,7 @@ const createUser = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Tao tai khoan thanh cong',
+    message: 'T?o t?i kho?n th?nh c?ng',
     data: createdUser,
   });
 });
@@ -49,7 +49,7 @@ const getUserById = asyncHandler(async (req, res) => {
   const user = await userService.getUserById(req.params.id);
 
   return sendSuccess(res, {
-    message: 'Lay chi tiet tai khoan thanh cong',
+    message: 'L?y chi ti?t t?i kho?n th?nh c?ng',
     data: user,
   });
 });
@@ -60,7 +60,7 @@ const updateUser = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Cap nhat tai khoan thanh cong',
+    message: 'C?p nh?t t?i kho?n th?nh c?ng',
     data: user,
   });
 });
@@ -71,7 +71,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Cap nhat trang thai tai khoan thanh cong',
+    message: 'C?p nh?t tr?ng th?i t?i kho?n th?nh c?ng',
     data: user,
   });
 });
@@ -96,3 +96,5 @@ module.exports = {
   updateUserStatus,
   resetUserPassword,
 };
+
+

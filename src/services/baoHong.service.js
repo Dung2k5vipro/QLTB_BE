@@ -57,7 +57,7 @@ const normalizeText = (value) => {
   return String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
+    .replace(/�/g, 'd')
     .replace(/Đ/g, 'D')
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
@@ -168,7 +168,7 @@ const resolveStatusBundle = async (connection) => {
 const ensureDeviceExists = async (thietBiId, options = {}) => {
   const device = await baoHongRepository.findDeviceById(thietBiId, options);
   if (!device) {
-    throw new AppError('Không tìm thấy thiết bị', 404);
+    throw new AppError('Không tìm thấy thiết b�9', 404);
   }
   return device;
 };
@@ -184,10 +184,10 @@ const ensureTicketExists = async (phieuBaoHongId, options = {}) => {
 const ensureMucDoUuTienExists = async (mucDoUuTienId, options = {}) => {
   const priority = await baoHongRepository.findMucDoUuTienById(mucDoUuTienId, options);
   if (!priority) {
-    throw new AppError('muc_do_uu_tien_id không hợp lệ', 400);
+    throw new AppError('muc_do_uu_tien_id không hợp l�!', 400);
   }
   if (Number(priority.is_active) !== 1) {
-    throw new AppError('muc_do_uu_tien_id đang không hoạt động', 400);
+    throw new AppError('muc_do_uu_tien_id �ang không hoạt ��"ng', 400);
   }
   return priority;
 };
@@ -197,10 +197,10 @@ const ensureDonViExists = async (donViId, options = {}) => {
 
   const donVi = await baoHongRepository.findDonViById(donViId, options);
   if (!donVi) {
-    throw new AppError('don_vi_id không hợp lệ', 400);
+    throw new AppError('don_vi_id không hợp l�!', 400);
   }
   if (Number(donVi.is_active) !== 1) {
-    throw new AppError('Đơn vị đang không hoạt động', 400);
+    throw new AppError('Đơn v�9 �ang không hoạt ��"ng', 400);
   }
 
   return donVi;
@@ -211,10 +211,10 @@ const ensureDonViSuaChuaExists = async (donViSuaChuaId, options = {}) => {
 
   const donViSuaChua = await baoHongRepository.findDonViSuaChuaById(donViSuaChuaId, options);
   if (!donViSuaChua) {
-    throw new AppError('don_vi_sua_chua_id không hợp lệ', 400);
+    throw new AppError('don_vi_sua_chua_id không hợp l�!', 400);
   }
   if (Number(donViSuaChua.is_active) !== 1) {
-    throw new AppError('Đơn vị sửa chữa đang không hoạt động', 400);
+    throw new AppError('Đơn v�9 sửa chữa �ang không hoạt ��"ng', 400);
   }
 
   return donViSuaChua;
@@ -223,10 +223,10 @@ const ensureDonViSuaChuaExists = async (donViSuaChuaId, options = {}) => {
 const ensureDeviceStatusExists = async (trangThaiThietBiId, options = {}) => {
   const status = await baoHongRepository.findTrangThaiThietBiById(trangThaiThietBiId, options);
   if (!status) {
-    throw new AppError('trang_thai_thiet_bi_id không hợp lệ', 400);
+    throw new AppError('trang_thai_thiet_bi_id không hợp l�!', 400);
   }
   if (Number(status.is_active) !== 1) {
-    throw new AppError('trang_thai_thiet_bi_id đang không hoạt động', 400);
+    throw new AppError('trang_thai_thiet_bi_id �ang không hoạt ��"ng', 400);
   }
   return status;
 };
@@ -246,7 +246,7 @@ const ensureCanCreateTicketForDevice = (actor, device) => {
     if (sameOwner || sameDonVi) return;
   }
 
-  throw new AppError('Bạn không có quyền báo hỏng thiết bị này', 403);
+  throw new AppError('Bạn không có quyền báo hỏng thiết b�9 này', 403);
 };
 
 const ensureCanViewTicket = (actor, ticket) => {
@@ -259,7 +259,7 @@ const ensureCanViewTicket = (actor, ticket) => {
 
 const ensureDeviceNotDisposed = (device) => {
   if (isDisposedStatus(device)) {
-    throw new AppError('Thiết bị đã thanh lý, không thể báo hỏng', 400);
+    throw new AppError('Thiết b�9 �ã thanh lý, không thỒ báo hỏng', 400);
   }
 };
 
@@ -330,7 +330,7 @@ const upsertNhatKyBaoTri = async ({
     });
 
     if (Number(log?.nhat_ky_bao_tri_id) !== Number(createdId)) {
-      throw new AppError('Không thể ghi nhận nhật ký bảo trì', 500);
+      throw new AppError('Không thỒ ghi nhận nhật ký bảo trì', 500);
     }
 
     return log;
@@ -372,7 +372,7 @@ const ensureMinimumDataForHoanThanh = (maintenanceLog) => {
   const ketQuaXuLy = String(maintenanceLog?.ket_qua_xu_ly || '').trim();
 
   if (!noiDungXuLy || !ketQuaXuLy) {
-    throw new AppError('Không thể hoàn thành khi thiếu thông tin xử lý tối thiểu', 400);
+    throw new AppError('Không thỒ hoàn thành khi thiếu thông tin xử lý t�i thiỒu', 400);
   }
 };
 
@@ -414,7 +414,7 @@ const determineFinalStatusFromResult = ({
   };
 
   if (isMaintenanceStatus(fallbackCurrentStatus)) {
-    throw new AppError('Không tìm thấy trạng thái thiết bị phù hợp để hoàn thành phiếu', 500);
+    throw new AppError('Không tìm thấy trạng thái thiết b�9 phù hợp �Ồ hoàn thành phiếu', 500);
   }
 
   return fallbackCurrentStatus;
@@ -431,8 +431,17 @@ const updateDeviceStatusIfNeeded = async ({
 }) => {
   const currentStatusId = Number(device.trang_thai_thiet_bi_id);
   const targetStatusId = Number(targetStatus?.trang_thai_thiet_bi_id);
+  const currentStatus = {
+    trang_thai_thiet_bi_id: device.trang_thai_thiet_bi_id,
+    ma_trang_thai: device.ma_trang_thai,
+    ten_trang_thai: device.ten_trang_thai,
+  };
 
   if (!targetStatusId || currentStatusId === targetStatusId) {
+    return false;
+  }
+
+  if (isDisposedStatus(currentStatus)) {
     return false;
   }
 
@@ -494,7 +503,7 @@ const createPhieuBaoHong = async (actor, payload, context = {}) => {
       openStatuses: PHIEU_DANG_MO,
     });
     if (openTicket) {
-      throw new AppError('Thiết bị đã có phiếu báo hỏng đang mở', 409);
+      throw new AppError('Thiết b�9 �ã có phiếu báo hỏng �ang m�x', 409);
     }
 
     const donViId = hasOwn(payload, 'don_vi_id')
@@ -521,7 +530,7 @@ const createPhieuBaoHong = async (actor, payload, context = {}) => {
         break;
       } catch (error) {
         if (isMysqlDuplicateKeyError(error) && isOpenDeviceDuplicateError(error)) {
-          throw new AppError('Thiết bị đã có phiếu báo hỏng đang mở', 409);
+          throw new AppError('Thiết b�9 �ã có phiếu báo hỏng �ang m�x', 409);
         }
         if (isMysqlDuplicateKeyError(error) && isMaPhieuDuplicateError(error)) {
           lastCreateError = error;
@@ -532,7 +541,7 @@ const createPhieuBaoHong = async (actor, payload, context = {}) => {
     }
 
     if (!createdId) {
-      throw lastCreateError || new AppError('Không thể tạo mã phiếu báo hỏng, vui lòng thử lại', 500);
+      throw lastCreateError || new AppError('Không thỒ tạo mã phiếu báo hỏng, vui lòng thử lại', 500);
     }
 
     const created = await ensureTicketExists(createdId, { connection });
@@ -609,17 +618,18 @@ const tiepNhanPhieuBaoHong = async (actor, phieuBaoHongId, _payload, context = {
     ensureTicketState(
       ticket,
       [PHIEU_TRANG_THAI.CHO_XU_LY],
-      'Chỉ được tiếp nhận phiếu đang ở trạng thái CHO_XU_LY',
+      'Ch�0 �ược tiếp nhận phiếu �ang �x trạng thái CHO_XU_LY',
     );
 
     const device = await ensureDeviceExists(ticket.thiet_bi_id, {
       connection,
       forUpdate: true,
     });
+    ensureDeviceNotDisposed(device);
 
     const statusBundle = await resolveStatusBundle(connection);
     if (!statusBundle.maintenanceStatus) {
-      throw new AppError('Không tìm thấy trạng thái thiết bị Đang bảo trì', 500);
+      throw new AppError('Không tìm thấy trạng thái thiết b�9 Đang bảo trì', 500);
     }
 
     const now = new Date();
@@ -697,7 +707,7 @@ const capNhatXuLyPhieuBaoHong = async (actor, phieuBaoHongId, payload, context =
     ensureTicketState(
       ticket,
       PHIEU_CO_THE_XU_LY,
-      'Chỉ được cập nhật xử lý khi phiếu ở trạng thái DA_TIEP_NHAN, DANG_XU_LY hoặc CHO_LINH_KIEN',
+      'Ch�0 �ược cập nhật xử lý khi phiếu �x trạng thái DA_TIEP_NHAN, DANG_XU_LY hoặc CHO_LINH_KIEN',
     );
 
     if (hasOwn(payload, 'don_vi_sua_chua_id')) {
@@ -708,9 +718,10 @@ const capNhatXuLyPhieuBaoHong = async (actor, phieuBaoHongId, payload, context =
       connection,
       forUpdate: true,
     });
+    ensureDeviceNotDisposed(device);
     const statusBundle = await resolveStatusBundle(connection);
     if (!statusBundle.maintenanceStatus) {
-      throw new AppError('Không tìm thấy trạng thái thiết bị Đang bảo trì', 500);
+      throw new AppError('Không tìm thấy trạng thái thiết b�9 Đang bảo trì', 500);
     }
 
     const now = new Date();
@@ -787,7 +798,7 @@ const hoanThanhPhieuBaoHong = async (actor, phieuBaoHongId, payload, context = {
     ensureTicketState(
       ticket,
       PHIEU_CO_THE_XU_LY,
-      'Chỉ được hoàn thành phiếu khi đang được tiếp nhận hoặc đang xử lý',
+      'Ch�0 �ược hoàn thành phiếu khi �ang �ược tiếp nhận hoặc �ang xử lý',
     );
 
     if (hasOwn(payload, 'don_vi_sua_chua_id')) {
@@ -803,6 +814,7 @@ const hoanThanhPhieuBaoHong = async (actor, phieuBaoHongId, payload, context = {
       connection,
       forUpdate: true,
     });
+    ensureDeviceNotDisposed(device);
     const statusBundle = await resolveStatusBundle(connection);
 
     const now = new Date();
@@ -894,7 +906,7 @@ const closeTicketWithoutCompletion = async (
     ensureTicketState(
       ticket,
       PHIEU_CO_THE_DONG_KHONG_HOAN_THANH,
-      `Không thể ${actionName} phiếu ở trạng thái hiện tại`,
+      `Không thỒ ${actionName} phiếu �x trạng thái hi�!n tại`,
     );
 
     const device = await ensureDeviceExists(ticket.thiet_bi_id, {
@@ -927,7 +939,7 @@ const closeTicketWithoutCompletion = async (
 
     if (wasReceived && isMaintenanceStatus(device)) {
       if (!statusBundle.inUseStatus) {
-        throw new AppError('Không tìm thấy trạng thái thiết bị Đang sử dụng để hoàn tác', 500);
+        throw new AppError('Không tìm thấy trạng thái thiết b�9 Đang sử dụng �Ồ hoàn tác', 500);
       }
 
       await updateDeviceStatusIfNeeded({
@@ -976,7 +988,7 @@ const tuChoiPhieuBaoHong = async (actor, phieuBaoHongId, payload, context = {}) 
     phieuBaoHongId,
     payload,
     PHIEU_TRANG_THAI.TU_CHOI,
-    'Từ chối',
+    'Từ ch�i',
     context,
   );
 };
@@ -1026,3 +1038,6 @@ module.exports = {
   huyPhieuBaoHong,
   getNhatKyBaoTriList,
 };
+
+
+

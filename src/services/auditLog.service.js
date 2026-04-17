@@ -1,8 +1,7 @@
 const auditLogRepository = require('../repositories/auditLog.repository');
 
-const safeStringify = (value) => {
-  if (value === undefined) return null;
-  if (value === null) return null;
+const safeSerialize = (value) => {
+  if (value === undefined || value === null) return null;
   if (typeof value === 'string') return value;
 
   try {
@@ -12,21 +11,21 @@ const safeStringify = (value) => {
   }
 };
 
-const writeAuditLog = async (payload) => {
+const writeAuditLog = async (payload = {}) => {
   try {
-    await auditLogRepository.createAuditLog({
+    await auditLogRepository.create({
       nguoi_dung_id: payload.nguoi_dung_id ?? null,
       module: payload.module ?? null,
       hanh_dong: payload.hanh_dong ?? null,
       entity_name: payload.entity_name ?? null,
       entity_id: payload.entity_id ?? null,
-      du_lieu_cu: safeStringify(payload.du_lieu_cu),
-      du_lieu_moi: safeStringify(payload.du_lieu_moi),
+      du_lieu_cu: safeSerialize(payload.du_lieu_cu),
+      du_lieu_moi: safeSerialize(payload.du_lieu_moi),
       ghi_chu: payload.ghi_chu ?? null,
       ip_address: payload.ip_address ?? null,
     });
   } catch (error) {
-    console.error('Audit log write failed:', error.message);
+    console.error('Ghi nhật ký hệ thống thất bại:', error.message);
   }
 };
 

@@ -13,7 +13,7 @@ const ALLOWED_TRANSFER_TYPES = ['CAP_PHAT', 'BAN_GIAO', 'DIEU_CHUYEN', 'THU_HOI'
 
 const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
-const requireObject = (value, message = 'Du lieu khong hop le') => {
+const requireObject = (value, message = 'D? li?u kh?ng h?p l?') => {
   if (!isObject(value)) {
     throw new AppError(message, 400);
   }
@@ -22,7 +22,7 @@ const requireObject = (value, message = 'Du lieu khong hop le') => {
 const assertOnlyAllowedKeys = (payload, allowedFields) => {
   const invalidFields = Object.keys(payload).filter((key) => !allowedFields.includes(key));
   if (invalidFields.length) {
-    throw new AppError(`Khong ho tro truong: ${invalidFields.join(', ')}`, 400);
+    throw new AppError(`Kh?ng h? tr? tr??ng: ${invalidFields.join(', ')}`, 400);
   }
 };
 
@@ -35,15 +35,15 @@ const ensureAtLeastOneField = (payload, fields, message) => {
 
 const toNonEmptyString = (value, fieldName, maxLength = 255) => {
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phai la chuoi`, 400);
+    throw new AppError(`${fieldName} ph?i l? chu?i`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) {
-    throw new AppError(`${fieldName} khong duoc de trong`, 400);
+    throw new AppError(`${fieldName} kh?ng ???c ?? tr?ng`, 400);
   }
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} vuot qua do dai toi da ${maxLength}`, 400);
+    throw new AppError(`${fieldName} v??t qu? ?? d?i t?i ?a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -53,13 +53,13 @@ const toNullableString = (value, fieldName, maxLength = 1000) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phai la chuoi`, 400);
+    throw new AppError(`${fieldName} ph?i l? chu?i`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} vuot qua do dai toi da ${maxLength}`, 400);
+    throw new AppError(`${fieldName} v??t qu? ?? d?i t?i ?a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -71,7 +71,7 @@ const toPositiveInt = (value, fieldName, { allowNull = false } = {}) => {
 
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new AppError(`${fieldName} phai la so nguyen duong`, 400);
+    throw new AppError(`${fieldName} ph?i l? s? nguy?n d??ng`, 400);
   }
 
   return parsed;
@@ -83,7 +83,7 @@ const toNonNegativeNumber = (value, fieldName) => {
 
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 0) {
-    throw new AppError(`${fieldName} phai la so khong am`, 400);
+    throw new AppError(`${fieldName} ph?i l? s? kh?ng ?m`, 400);
   }
 
   return parsed;
@@ -93,14 +93,14 @@ const toDateString = (value, fieldName) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phai la chuoi ngay YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} ph?i l? chu?i ngay YYYY-MM-DD`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    throw new AppError(`${fieldName} phai theo dinh dang YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} ph?i theo ??nh d?ng YYYY-MM-DD`, 400);
   }
 
   const [year, month, day] = normalized.split('-').map(Number);
@@ -111,13 +111,13 @@ const toDateString = (value, fieldName) => {
     || Number(date.getUTCMonth()) + 1 !== month
     || Number(date.getUTCDate()) !== day
   ) {
-    throw new AppError(`${fieldName} khong hop le`, 400);
+    throw new AppError(`${fieldName} kh?ng h?p l?`, 400);
   }
 
   return normalized;
 };
 
-const requireObjectVn = (value, message = 'Dữ liệu gửi lên không hợp lệ') => {
+const requireObjectVn = (value, message = 'Dữ li�!u gửi lên không hợp l�!') => {
   if (!isObject(value)) {
     throw new AppError(message, 400);
   }
@@ -126,26 +126,26 @@ const requireObjectVn = (value, message = 'Dữ liệu gửi lên không hợp l
 const assertOnlyAllowedKeysVn = (payload, allowedFields) => {
   const invalidFields = Object.keys(payload).filter((key) => !allowedFields.includes(key));
   if (invalidFields.length) {
-    throw new AppError(`Không hỗ trợ trường: ${invalidFields.join(', ')}`, 400);
+    throw new AppError(`Không h� trợ trường: ${invalidFields.join(', ')}`, 400);
   }
 };
 
 const toPositiveIntVn = (value, fieldName, { allowNull = false, required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} là bắt buộc`, 400);
+      throw new AppError(`${fieldName} là bắt bu�"c`, 400);
     }
     return undefined;
   }
 
   if (value === null) {
     if (allowNull) return null;
-    throw new AppError(`${fieldName} phải là số nguyên dương`, 400);
+    throw new AppError(`${fieldName} phải là s� nguyên dương`, 400);
   }
 
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new AppError(`${fieldName} phải là số nguyên dương`, 400);
+    throw new AppError(`${fieldName} phải là s� nguyên dương`, 400);
   }
 
   return parsed;
@@ -154,25 +154,25 @@ const toPositiveIntVn = (value, fieldName, { allowNull = false, required = false
 const toNullableStringVn = (value, fieldName, maxLength = 2000, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} là bắt buộc`, 400);
+      throw new AppError(`${fieldName} là bắt bu�"c`, 400);
     }
     return undefined;
   }
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phải là chuỗi`, 400);
+    throw new AppError(`${fieldName} phải là chu�i`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) {
     if (required) {
-      throw new AppError(`${fieldName} là bắt buộc`, 400);
+      throw new AppError(`${fieldName} là bắt bu�"c`, 400);
     }
     return null;
   }
 
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} vượt quá độ dài tối đa ${maxLength}`, 400);
+    throw new AppError(`${fieldName} vượt quá ��" dài t�i �a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -182,7 +182,7 @@ const toDateTimeVn = (value, fieldName) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phải là chuỗi thời gian hợp lệ`, 400);
+    throw new AppError(`${fieldName} phải là chu�i thời gian hợp l�!`, 400);
   }
 
   const normalized = value.trim();
@@ -190,7 +190,7 @@ const toDateTimeVn = (value, fieldName) => {
 
   const date = new Date(normalized);
   if (Number.isNaN(date.getTime())) {
-    throw new AppError(`${fieldName} không hợp lệ`, 400);
+    throw new AppError(`${fieldName} không hợp l�!`, 400);
   }
 
   return date;
@@ -200,14 +200,14 @@ const parseDateOnlyVn = (value, fieldName) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} phải theo định dạng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phải theo ��9nh dạng YYYY-MM-DD`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    throw new AppError(`${fieldName} phải theo định dạng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phải theo ��9nh dạng YYYY-MM-DD`, 400);
   }
 
   const [year, month, day] = normalized.split('-').map(Number);
@@ -217,14 +217,14 @@ const parseDateOnlyVn = (value, fieldName) => {
     || Number(date.getUTCMonth()) + 1 !== month
     || Number(date.getUTCDate()) !== day
   ) {
-    throw new AppError(`${fieldName} không hợp lệ`, 400);
+    throw new AppError(`${fieldName} không hợp l�!`, 400);
   }
 
   return normalized;
 };
 
 const parseTransferBody = (body, { requireReason = false } = {}) => {
-  requireObjectVn(body, 'Dữ liệu gửi lên không hợp lệ');
+  requireObjectVn(body, 'Dữ li�!u gửi lên không hợp l�!');
   assertOnlyAllowedKeysVn(body, [
     'thiet_bi_id',
     'den_don_vi_id',
@@ -264,7 +264,7 @@ const dieuChuyen = {
 
 const thuHoi = {
   body: (body) => {
-    requireObjectVn(body, 'Dữ liệu gửi lên không hợp lệ');
+    requireObjectVn(body, 'Dữ li�!u gửi lên không hợp l�!');
     assertOnlyAllowedKeysVn(body, [
       'thiet_bi_id',
       'den_don_vi_id',
@@ -287,7 +287,7 @@ const thuHoi = {
 
 const getTransferHistory = {
   query: (query) => {
-    requireObjectVn(query, 'Dữ liệu query không hợp lệ');
+    requireObjectVn(query, 'Dữ li�!u query không hợp l�!');
     assertOnlyAllowedKeysVn(query, [
       'thiet_bi_id',
       'loai_nghiep_vu',
@@ -306,7 +306,7 @@ const getTransferHistory = {
     const limit = query.limit === undefined ? 20 : toPositiveIntVn(query.limit, 'limit');
 
     if (limit > 100) {
-      throw new AppError('limit tối đa là 100', 400);
+      throw new AppError('limit t�i �a là 100', 400);
     }
 
     const loaiNghiepVu = query.loai_nghiep_vu === undefined
@@ -314,13 +314,13 @@ const getTransferHistory = {
       : String(query.loai_nghiep_vu || '').trim().toUpperCase();
 
     if (loaiNghiepVu && !ALLOWED_TRANSFER_TYPES.includes(loaiNghiepVu)) {
-      throw new AppError(`loai_nghiep_vu chỉ hỗ trợ: ${ALLOWED_TRANSFER_TYPES.join(', ')}`, 400);
+      throw new AppError(`loai_nghiep_vu ch�0 h� trợ: ${ALLOWED_TRANSFER_TYPES.join(', ')}`, 400);
     }
 
     const tuNgay = parseDateOnlyVn(query.tu_ngay, 'tu_ngay');
     const denNgay = parseDateOnlyVn(query.den_ngay, 'den_ngay');
     if (tuNgay && denNgay && denNgay < tuNgay) {
-      throw new AppError('den_ngay không được nhỏ hơn tu_ngay', 400);
+      throw new AppError('den_ngay không �ược nhỏ hơn tu_ngay', 400);
     }
 
     return {
@@ -345,20 +345,20 @@ const assertNgayMuaNotFuture = (ngayMua) => {
   const now = new Date();
   const nowDate = now.toISOString().slice(0, 10);
   if (ngayMua > nowDate) {
-    throw new AppError('ngay_mua khong duoc lon hon ngay hien tai', 400);
+    throw new AppError('ngay_mua kh?ng ???c l?n h?n ngay hi?n t?i', 400);
   }
 };
 
 const assertWarrantyAfterPurchase = ({ ngayMua, ngayHetBaoHanh }) => {
   if (!ngayMua || !ngayHetBaoHanh) return;
   if (ngayHetBaoHanh < ngayMua) {
-    throw new AppError('ngay_het_bao_hanh khong duoc nho hon ngay_mua', 400);
+    throw new AppError('ngay_het_bao_hanh kh?ng ???c nh? h?n ngay_mua', 400);
   }
 };
 
 const deviceIdParam = {
   params: (params) => {
-    requireObject(params, 'Params khong hop le');
+    requireObject(params, 'Params kh?ng h?p l?');
 
     return {
       id: toPositiveInt(params.id, 'id'),
@@ -368,7 +368,7 @@ const deviceIdParam = {
 
 const createDevice = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
 
     const allowedFields = [
       'ten_thiet_bi',
@@ -421,7 +421,7 @@ const createDevice = {
 
 const updateDevice = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
 
     const allowedFields = [
       'ten_thiet_bi',
@@ -439,7 +439,7 @@ const updateDevice = {
       'ghi_chu',
     ];
     assertOnlyAllowedKeys(body, allowedFields);
-    ensureAtLeastOneField(body, allowedFields, 'Can it nhat 1 truong de cap nhat');
+    ensureAtLeastOneField(body, allowedFields, 'C?n ?t nh?t 1 tr??ng de cap nhat');
 
     const payload = {};
 
@@ -500,7 +500,7 @@ const updateDevice = {
 
 const updateDeviceStatus = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
     assertOnlyAllowedKeys(body, ['trang_thai_thiet_bi_id', 'ly_do']);
 
     return {
@@ -512,23 +512,23 @@ const updateDeviceStatus = {
 
 const getDevicesQuery = {
   query: (query) => {
-    requireObject(query, 'Query khong hop le');
+    requireObject(query, 'Query kh?ng h?p l?');
 
     const page = query.page === undefined ? 1 : toPositiveInt(query.page, 'page');
     const limit = query.limit === undefined ? 20 : toPositiveInt(query.limit, 'limit');
 
     if (limit > 100) {
-      throw new AppError('limit toi da la 100', 400);
+      throw new AppError('limit t?i ?a l? 100', 400);
     }
 
     const sortBy = query.sortBy ? toNonEmptyString(query.sortBy, 'sortBy', 50) : 'created_at';
     const sortOrder = query.sortOrder ? toNonEmptyString(query.sortOrder, 'sortOrder', 4).toUpperCase() : 'DESC';
 
     if (!ALLOWED_SORT_FIELDS.includes(sortBy)) {
-      throw new AppError(`sortBy chi ho tro: ${ALLOWED_SORT_FIELDS.join(', ')}`, 400);
+      throw new AppError(`sortBy ch? h? tr?: ${ALLOWED_SORT_FIELDS.join(', ')}`, 400);
     }
     if (!ALLOWED_SORT_ORDERS.includes(sortOrder)) {
-      throw new AppError('sortOrder chi ho tro ASC hoac DESC', 400);
+      throw new AppError('sortOrder ch? h? tr? ASC ho?c DESC', 400);
     }
 
     const keyword = query.keyword ? toNonEmptyString(query.keyword, 'keyword', 255) : undefined;
@@ -542,7 +542,7 @@ const getDevicesQuery = {
     const toDate = query.toDate === undefined ? undefined : toDateString(query.toDate, 'toDate');
 
     if (fromDate && toDate && toDate < fromDate) {
-      throw new AppError('toDate khong duoc nho hon fromDate', 400);
+      throw new AppError('toDate kh?ng ???c nh? h?n fromDate', 400);
     }
 
     return {
@@ -580,3 +580,4 @@ module.exports = {
   getDeviceStatusHistory,
   deviceIdParam,
 };
+

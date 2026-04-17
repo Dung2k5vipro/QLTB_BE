@@ -4,12 +4,12 @@ const hangSanXuatService = require('../services/hangSanXuat.service');
 const controller = createMasterDataController({
   service: hangSanXuatService,
   messages: {
-    list: 'Lay danh sach hang san xuat thanh cong',
-    detail: 'Lay chi tiet hang san xuat thanh cong',
-    create: 'Tao hang san xuat thanh cong',
-    update: 'Cap nhat hang san xuat thanh cong',
-    updateStatus: 'Cap nhat trang thai hang san xuat thanh cong',
-    statusUnchanged: 'Trang thai hang san xuat khong thay doi',
+    list: 'L?y danh s?ch h?ng s?n xu?t th?nh c?ng',
+    detail: 'L?y chi ti?t h?ng s?n xu?t th?nh c?ng',
+    create: 'T?o h?ng s?n xu?t th?nh c?ng',
+    update: 'C?p nh?t h?ng s?n xu?t th?nh c?ng',
+    updateStatus: 'C?p nh?t tr?ng th?i h?ng s?n xu?t th?nh c?ng',
+    statusUnchanged: 'Tr?ng th?i h?ng s?n xu?t kh?ng thay ??i',
   },
 });
 
@@ -20,3 +20,5 @@ module.exports = {
   updateHangSanXuat: controller.update,
   updateHangSanXuatStatus: controller.updateStatus,
 };
+
+

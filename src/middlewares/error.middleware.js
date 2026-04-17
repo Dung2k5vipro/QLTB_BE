@@ -1,6 +1,6 @@
 const errorMiddleware = (err, _req, res, _next) => {
   const statusCode = Number(err?.status || err?.statusCode) || 500;
-  const message = err?.message || 'Internal server error';
+  const message = err?.message || 'Lỗi máy chủ nội bộ';
 
   if (statusCode >= 500) {
     console.error(err);

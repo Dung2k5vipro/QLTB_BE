@@ -32,7 +32,7 @@ const validateMiddleware = (schema = {}) => {
     } catch (error) {
       return res.status(error.statusCode || 400).json({
         success: false,
-        message: error.message || 'Invalid request payload',
+        message: error.message || 'Dữ liệu yêu cầu không hợp lệ',
         details: error.details || undefined,
       });
     }

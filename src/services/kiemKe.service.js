@@ -34,7 +34,12 @@ const DEFAULT_TINH_TRANG_PRIORITY_CODES = [
   'CHUA_KIEMKE',
   'CHUA_CO_KET_QUA',
   'CHO_KIEM_KE',
-  'TOT_DAT',
+  'CHO_KIEMKE',
+];
+const PENDING_TINH_TRANG_NORMALIZED_CODES = [
+  'CHUAKIEMKE',
+  'CHUACOKETQUA',
+  'CHOKIEMKE',
 ];
 
 const hasOwn = (obj, key) => {
@@ -45,7 +50,7 @@ const normalizeText = (value) => {
   return String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
+    .replace(/�/g, 'd')
     .replace(/Đ/g, 'D')
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
@@ -99,6 +104,20 @@ const normalizeInventoryStatusCode = (maTinhTrang) => {
   return normalizeText(maTinhTrang);
 };
 
+const isPendingInventoryStatus = (maTinhTrang) => {
+  return PENDING_TINH_TRANG_NORMALIZED_CODES.includes(normalizeInventoryStatusCode(maTinhTrang));
+};
+
+const normalizeRole = (user) => {
+  return String(
+    user?.ma_vai_tro
+    || user?.ten_vai_tro
+    || user?.vai_tro
+    || user?.role
+    || '',
+  ).trim().toUpperCase();
+};
+
 const parseJsonSafely = (value) => {
   if (value === undefined || value === null) return null;
   if (typeof value === 'object') return value;
@@ -134,7 +153,12 @@ const generateMaPhieuKiemKe = () => {
 const buildThongKeChiTiet = (chiTietList) => {
   const tongThietBi = Number(chiTietList.length || 0);
   const daKiemKe = chiTietList.filter((item) => {
-    return Boolean(item?.tinh_trang_kiem_ke_id && item?.nguoi_kiem_ke_id && item?.thoi_gian_kiem_ke);
+    return Boolean(
+      item?.tinh_trang_kiem_ke_id
+      && item?.nguoi_kiem_ke_id
+      && item?.thoi_gian_kiem_ke
+      && !isPendingInventoryStatus(item?.ma_tinh_trang)
+    );
   }).length;
 
   return {
@@ -147,7 +171,7 @@ const buildThongKeChiTiet = (chiTietList) => {
 const ensurePhieuExists = async (phieuKiemKeId, options = {}) => {
   const phieu = await kiemKeRepository.findPhieuKiemKeById(phieuKiemKeId, options);
   if (!phieu) {
-    throw new AppError('Không tìm thấy phiếu kiểm kê', 404);
+    throw new AppError('Không tìm thấy phiếu kiỒm kê', 404);
   }
   return phieu;
 };
@@ -157,10 +181,10 @@ const ensureDonViExists = async (donViId, options = {}) => {
 
   const donVi = await kiemKeRepository.findDonViById(donViId, options);
   if (!donVi) {
-    throw new AppError('Đơn vị không tồn tại', 400);
+    throw new AppError('Đơn v�9 không t�n tại', 400);
   }
   if (Number(donVi.is_active) !== 1) {
-    throw new AppError('Đơn vị đang không hoạt động', 400);
+    throw new AppError('Đơn v�9 �ang không hoạt ��"ng', 400);
   }
 
   return donVi;
@@ -171,10 +195,10 @@ const ensureNguoiDungExists = async (nguoiDungId, options = {}) => {
 
   const nguoiDung = await kiemKeRepository.findNguoiDungById(nguoiDungId, options);
   if (!nguoiDung) {
-    throw new AppError('Người dùng không tồn tại', 400);
+    throw new AppError('Người dùng không t�n tại', 400);
   }
   if (String(nguoiDung.trang_thai_tai_khoan || '').toUpperCase() !== ACTIVE_ACCOUNT_STATUS) {
-    throw new AppError('Người dùng đang không hoạt động', 400);
+    throw new AppError('Người dùng �ang không hoạt ��"ng', 400);
   }
 
   return nguoiDung;
@@ -183,10 +207,10 @@ const ensureNguoiDungExists = async (nguoiDungId, options = {}) => {
 const ensureTinhTrangKiemKeExists = async (tinhTrangKiemKeId, options = {}) => {
   const tinhTrang = await kiemKeRepository.findTinhTrangKiemKeById(tinhTrangKiemKeId, options);
   if (!tinhTrang) {
-    throw new AppError('tinh_trang_kiem_ke_id không hợp lệ', 400);
+    throw new AppError('tinh_trang_kiem_ke_id không hợp l�!', 400);
   }
   if (Number(tinhTrang.is_active) !== 1) {
-    throw new AppError('Tình trạng kiểm kê đang không hoạt động', 400);
+    throw new AppError('Tình trạng kiỒm kê �ang không hoạt ��"ng', 400);
   }
   return tinhTrang;
 };
@@ -194,19 +218,31 @@ const ensureTinhTrangKiemKeExists = async (tinhTrangKiemKeId, options = {}) => {
 const ensureTransitionAllowed = (currentStatus, nextStatus) => {
   const allowedStatuses = ALLOWED_TRANSITIONS[currentStatus] || [];
   if (!allowedStatuses.includes(nextStatus)) {
-    throw new AppError(`Không thể chuyển trạng thái từ ${currentStatus} sang ${nextStatus}`, 400);
+    throw new AppError(`Không thỒ chuyỒn trạng thái từ ${currentStatus} sang ${nextStatus}`, 400);
   }
+};
+
+const ensureConfirmPermission = (actor) => {
+  const role = normalizeRole(actor);
+  if (role === 'ADMIN' || role === 'NHAN_VIEN_THIET_BI') return;
+  throw new AppError('Bạn không có quyền xác nhận phiếu kiỒm kê', 403);
+};
+
+const ensureCompletePermission = (actor) => {
+  const role = normalizeRole(actor);
+  if (role === 'ADMIN' || role === 'NGUOI_DUYET') return;
+  throw new AppError('Bạn không có quyền hoàn tất phiếu kiỒm kê', 403);
 };
 
 const ensureEditablePhieu = (phieu) => {
   if (phieu.trang_thai === PHIEU_TRANG_THAI.HOAN_TAT || phieu.trang_thai === PHIEU_TRANG_THAI.HUY) {
-    throw new AppError('Phiếu kiểm kê đã hoàn tất hoặc đã hủy, không thể thao tác', 400);
+    throw new AppError('Phiếu kiỒm kê �ã hoàn tất hoặc �ã hủy, không thỒ thao tác', 400);
   }
 };
 
 const ensureChiTietEditable = (phieu) => {
   if (!CHI_TIET_EDITABLE_STATES.includes(phieu.trang_thai)) {
-    throw new AppError('Chỉ được cập nhật chi tiết khi phiếu ở trạng thái NHAP hoặc DANG_KIEM_KE', 400);
+    throw new AppError('Ch�0 �ược cập nhật chi tiết khi phiếu �x trạng thái NHAP hoặc DANG_KIEM_KE', 400);
   }
 };
 
@@ -218,11 +254,12 @@ const resolveDefaultTinhTrangKiemKe = async (connection) => {
     }
   }
 
-  const activeList = await kiemKeRepository.findActiveTinhTrangKiemKeList({ connection });
-  if (!activeList.length) {
-    throw new AppError('Chưa cấu hình tình trạng kiểm kê hoạt động trong hệ thống', 500);
+  const defaultRow = await kiemKeRepository.ensureDefaultTinhTrangKiemKe({ connection });
+  if (defaultRow && Number(defaultRow.is_active) === 1) {
+    return defaultRow;
   }
-  return activeList[0];
+
+  throw new AppError('Ch?a c?u h?nh t?nh tr?ng ki?m k? ??u k? trong h? th?ng (v? d?: CHUA_KIEM_KE)', 500);
 };
 
 const resolveTrangThaiThietBiBundle = async (connection) => {
@@ -266,7 +303,7 @@ const resolvePhieuScope = (currentPhieu, payload) => {
   }
 
   if (nextLoaiPhamVi === LOAI_PHAM_VI.THEO_DON_VI && !nextDonViId) {
-    throw new AppError('don_vi_id là bắt buộc khi loai_pham_vi = THEO_DON_VI', 400);
+    throw new AppError('don_vi_id là bắt bu�"c khi loai_pham_vi = THEO_DON_VI', 400);
   }
 
   return {
@@ -283,13 +320,13 @@ const mapDuplicateDatabaseError = (error) => {
   if (!isMysqlDuplicateKeyError(error)) return error;
 
   if (isMaPhieuDuplicateError(error)) {
-    return new AppError('Mã phiếu kiểm kê bị trùng, vui lòng thử lại', 409);
+    return new AppError('Mã phiếu kiỒm kê b�9 trùng, vui lòng thử lại', 409);
   }
   if (isChiTietPhieuThietBiDuplicateError(error)) {
-    return new AppError('Đã có thiết bị bị trùng trong danh sách kiểm kê của phiếu', 409);
+    return new AppError('Đã có thiết b�9 b�9 trùng trong danh sách kiỒm kê của phiếu', 409);
   }
 
-  return new AppError('Dữ liệu bị trùng với bản ghi khác', 409);
+  return new AppError('Dữ li�!u b�9 trùng v�:i bản ghi khác', 409);
 };
 
 const applySingleChiTietUpdate = async ({
@@ -309,7 +346,7 @@ const applySingleChiTietUpdate = async ({
     },
   );
   if (!currentChiTiet) {
-    throw new AppError('Không tìm thấy chi tiết kiểm kê', 404);
+    throw new AppError('Không tìm thấy chi tiết kiỒm kê', 404);
   }
 
   ensureChiTietEditable(phieu);
@@ -327,7 +364,7 @@ const applySingleChiTietUpdate = async ({
   if (hasOwn(payload, 'don_vi_thuc_te_id') && payload.don_vi_thuc_te_id !== null) {
     await ensureDonViExists(payload.don_vi_thuc_te_id, { connection });
     if (!isSaiViTri) {
-      throw new AppError('Chỉ được nhập don_vi_thuc_te_id khi tình trạng kiểm kê là SAI_VI_TRI', 400);
+      throw new AppError('Ch�0 �ược nhập don_vi_thuc_te_id khi tình trạng kiỒm kê là SAI_VI_TRI', 400);
     }
   }
 
@@ -359,8 +396,7 @@ const applySingleChiTietUpdate = async ({
   }
 
   const isUpdatingResult = hasOwn(payload, 'tinh_trang_kiem_ke_id')
-    || hasOwn(payload, 'don_vi_thuc_te_id')
-    || hasOwn(payload, 'ghi_chu');
+    || hasOwn(payload, 'don_vi_thuc_te_id');
 
   if (isUpdatingResult && !hasOwn(updatePayload, 'nguoi_kiem_ke_id') && !currentChiTiet.nguoi_kiem_ke_id) {
     updatePayload.nguoi_kiem_ke_id = Number(actor.nguoi_dung_id);
@@ -401,7 +437,7 @@ const syncDeviceFromChiTiet = async ({
       thiet_bi_id: chiTiet.thiet_bi_id,
       ma_tai_san: chiTiet.ma_tai_san || null,
       da_cap_nhat: false,
-      canh_bao: 'Thiết bị không còn tồn tại để đồng bộ',
+      canh_bao: 'Thi?t b? kh?ng c?n t?n t?i ?? ??ng b?',
     };
   }
 
@@ -411,6 +447,15 @@ const syncDeviceFromChiTiet = async ({
     ma_trang_thai: device.ma_trang_thai,
     ten_trang_thai: device.ten_trang_thai,
   };
+
+  if (isDisposedStatus(currentStatus)) {
+    return {
+      thiet_bi_id: device.thiet_bi_id,
+      ma_tai_san: device.ma_tai_san,
+      da_cap_nhat: false,
+      canh_bao: 'Thi?t b? ?? thanh l?, b? qua ??ng b? ?? tr?nh m? l?i tr?ng th?i',
+    };
+  }
 
   let targetStatus = null;
   if (maTinhTrang.includes('HONG')) {
@@ -435,9 +480,9 @@ const syncDeviceFromChiTiet = async ({
       hasUpdate = true;
     }
   } else if (maTinhTrang.includes('HONG')) {
-    warning = 'Không tìm thấy trạng thái thiết bị tương ứng cho kết quả HỎNG';
+    warning = 'Kh?ng t?m th?y tr?ng th?i thi?t b? t??ng ?ng cho k?t qu? H?NG';
   } else if (maTinhTrang.includes('THIEUMAT') || maTinhTrang.includes('MATTHIEU')) {
-    warning = 'Không tìm thấy trạng thái thiết bị tương ứng cho kết quả THIẾU/MẤT';
+    warning = 'Kh?ng t?m th?y tr?ng th?i thi?t b? t??ng ?ng cho k?t qu? THI?U/M?T';
   }
 
   if (maTinhTrang.includes('SAIVITRI')) {
@@ -447,12 +492,12 @@ const syncDeviceFromChiTiet = async ({
         hasUpdate = true;
       }
     } else {
-      warning = warning || 'Thiết bị có kết quả SAI_VI_TRI nhưng thiếu don_vi_thuc_te_id';
+      warning = warning || 'Thi?t b? c? k?t qu? SAI_VI_TRI nh?ng thi?u don_vi_thuc_te_id';
     }
   }
 
   if (chiTiet.ten_tinh_trang) {
-    updatePayload.tinh_trang_hien_tai = `Kết quả kiểm kê: ${chiTiet.ten_tinh_trang}`;
+    updatePayload.tinh_trang_hien_tai = `K?t qu? ki?m k?: ${chiTiet.ten_tinh_trang}`;
     hasUpdate = true;
   }
 
@@ -467,17 +512,14 @@ const syncDeviceFromChiTiet = async ({
 
   await kiemKeRepository.updateDeviceById(device.thiet_bi_id, updatePayload, { connection });
 
-  if (
-    hasOwn(updatePayload, 'trang_thai_thiet_bi_id')
-    && Number(updatePayload.trang_thai_thiet_bi_id) !== Number(device.trang_thai_thiet_bi_id)
-  ) {
+  if (hasOwn(updatePayload, 'trang_thai_thiet_bi_id') && Number(updatePayload.trang_thai_thiet_bi_id) !== Number(device.trang_thai_thiet_bi_id)) {
     await kiemKeRepository.createDeviceStatusHistory({
       thiet_bi_id: device.thiet_bi_id,
       tu_trang_thai_id: device.trang_thai_thiet_bi_id,
       den_trang_thai_id: updatePayload.trang_thai_thiet_bi_id,
       loai_nguon_phat_sinh: 'KIEM_KE',
       nguon_phat_sinh_id: phieu.phieu_kiem_ke_id,
-      ly_do: `Đồng bộ sau kiểm kê phiếu ${phieu.ma_phieu}`,
+      ly_do: `??ng b? sau ki?m k? phi?u ${phieu.ma_phieu}`,
       changed_by: actor.nguoi_dung_id,
     }, { connection });
   }
@@ -509,7 +551,7 @@ const createPhieuKiemKe = async (actor, payload, context = {}) => {
     );
     const validDevices = filterValidDevicesForInventory(devicesInScope);
     if (!validDevices.length) {
-      throw new AppError('Không có thiết bị hợp lệ trong phạm vi kiểm kê', 400);
+      throw new AppError('Không có thiết b�9 hợp l�! trong phạm vi kiỒm kê', 400);
     }
 
     const defaultTinhTrang = await resolveDefaultTinhTrangKiemKe(connection);
@@ -541,7 +583,7 @@ const createPhieuKiemKe = async (actor, payload, context = {}) => {
     }
 
     if (!createdPhieuId) {
-      throw lastCreateError || new AppError('Không thể sinh mã phiếu kiểm kê, vui lòng thử lại', 500);
+      throw lastCreateError || new AppError('Không thỒ sinh mã phiếu kiỒm kê, vui lòng thử lại', 500);
     }
 
     const chiTietRows = validDevices.map((device) => ({
@@ -571,7 +613,7 @@ const createPhieuKiemKe = async (actor, payload, context = {}) => {
         ...createdPhieu,
         thong_ke: thongKe,
       },
-      ghi_chu: `Tạo phiếu kiểm kê ${createdPhieu.ma_phieu}`,
+      ghi_chu: `Tạo phiếu kiỒm kê ${createdPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -633,7 +675,7 @@ const updatePhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =>
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.NHAP) {
-      throw new AppError('Chỉ được cập nhật phiếu khi trạng thái là NHAP', 400);
+      throw new AppError('Ch�0 �ược cập nhật phiếu khi trạng thái là NHAP', 400);
     }
 
     const resolvedScope = resolvePhieuScope(currentPhieu, payload);
@@ -666,7 +708,7 @@ const updatePhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =>
       );
       const validDevices = filterValidDevicesForInventory(devicesInScope);
       if (!validDevices.length) {
-        throw new AppError('Không có thiết bị hợp lệ trong phạm vi kiểm kê', 400);
+        throw new AppError('Không có thiết b�9 hợp l�! trong phạm vi kiỒm kê', 400);
       }
 
       const defaultTinhTrang = await resolveDefaultTinhTrangKiemKe(connection);
@@ -703,7 +745,7 @@ const updatePhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =>
         ...updatedPhieu,
         thong_ke: thongKe,
       },
-      ghi_chu: `Cập nhật phiếu kiểm kê ${updatedPhieu.ma_phieu}`,
+      ghi_chu: `Cập nhật phiếu kiỒm kê ${updatedPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -719,18 +761,73 @@ const updatePhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =>
   }
 };
 
+const xacNhanPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) => {
+  ensureConfirmPermission(actor);
+  const connection = await kiemKeRepository.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const currentPhieu = await ensurePhieuExists(phieuKiemKeId, {
+      connection,
+      forUpdate: true,
+    });
+
+    if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.DANG_KIEM_KE) {
+      throw new AppError('Ch�0 �ược xác nhận khi phiếu �ang �x trạng thái DANG_KIEM_KE', 400);
+    }
+
+    const totalChiTiet = await kiemKeRepository.countChiTietKiemKeByPhieuId(phieuKiemKeId, {}, { connection });
+    if (totalChiTiet <= 0) {
+      throw new AppError('Phiếu kiỒm kê chưa có chi tiết thiết b�9', 400);
+    }
+
+    const pendingCount = await kiemKeRepository.countPendingChiTietByPhieuId(phieuKiemKeId, { connection });
+    if (pendingCount > 0) {
+      throw new AppError('Không thỒ xác nhận: còn thiết b�9 chưa nhập �ủ kết quả kiỒm kê', 400);
+    }
+
+    await kiemKeRepository.updatePhieuKiemKeById(phieuKiemKeId, {
+      trang_thai: PHIEU_TRANG_THAI.CHO_XAC_NHAN,
+      nguoi_xac_nhan_id: actor.nguoi_dung_id,
+      ghi_chu: hasOwn(payload, 'ghi_chu') ? payload.ghi_chu : currentPhieu.ghi_chu,
+    }, { connection });
+
+    const updatedPhieu = await ensurePhieuExists(phieuKiemKeId, { connection });
+
+    await connection.commit();
+
+    await writeAuditLog({
+      nguoi_dung_id: actor?.nguoi_dung_id || null,
+      module: MODULE_NAME,
+      hanh_dong: 'XAC_NHAN_PHIEU_KIEM_KE',
+      entity_name: ENTITY_NAME,
+      entity_id: phieuKiemKeId,
+      du_lieu_cu: currentPhieu,
+      du_lieu_moi: updatedPhieu,
+      ghi_chu: `X?c nh?n phi?u ki?m k? ${updatedPhieu.ma_phieu}`,
+      ip_address: context.ipAddress,
+    });
+
+    return updatedPhieu;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 const chuyenTrangThaiPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) => {
   if (payload.trang_thai === PHIEU_TRANG_THAI.HUY) {
     return huyPhieuKiemKe(actor, phieuKiemKeId, {
-      ly_do: payload.ghi_chu || 'Hủy từ API chuyển trạng thái',
+      ly_do: payload.ghi_chu || 'H?y t? API chuy?n tr?ng th?i',
       ghi_chu: payload.ghi_chu || null,
     }, context);
   }
 
-  if (payload.trang_thai === PHIEU_TRANG_THAI.HOAN_TAT) {
-    return hoanTatPhieuKiemKe(actor, phieuKiemKeId, {
-      ghi_chu: payload.ghi_chu ?? null,
-    }, context);
+  if (payload.trang_thai === PHIEU_TRANG_THAI.CHO_XAC_NHAN || payload.trang_thai === PHIEU_TRANG_THAI.HOAN_TAT) {
+    throw new AppError('Vui l?ng d?ng API x?c nh?n ho?c ho?n t?t ri?ng cho phi?u ki?m k?', 400);
   }
 
   const connection = await kiemKeRepository.getConnection();
@@ -765,7 +862,7 @@ const chuyenTrangThaiPhieuKiemKe = async (actor, phieuKiemKeId, payload, context
       entity_id: phieuKiemKeId,
       du_lieu_cu: currentPhieu,
       du_lieu_moi: updatedPhieu,
-      ghi_chu: `Chuyển trạng thái phiếu ${updatedPhieu.ma_phieu} sang ${payload.trang_thai}`,
+      ghi_chu: `Chuy?n tr?ng th?i phi?u ${updatedPhieu.ma_phieu} sang ${payload.trang_thai}`,
       ip_address: context.ipAddress,
     });
 
@@ -816,7 +913,7 @@ const huyPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) => {
       entity_id: phieuKiemKeId,
       du_lieu_cu: currentPhieu,
       du_lieu_moi: updatedPhieu,
-      ghi_chu: `Hủy phiếu kiểm kê ${updatedPhieu.ma_phieu}: ${payload.ly_do}`,
+      ghi_chu: `Hủy phiếu kiỒm kê ${updatedPhieu.ma_phieu}: ${payload.ly_do}`,
       ip_address: context.ipAddress,
     });
 
@@ -886,7 +983,7 @@ const updateChiTietKiemKe = async (actor, phieuKiemKeId, chiTietKiemKeId, payloa
       entity_id: chiTietKiemKeId,
       du_lieu_cu: result.oldData,
       du_lieu_moi: result.newData,
-      ghi_chu: `Cập nhật chi tiết kiểm kê #${chiTietKiemKeId} của phiếu ${phieu.ma_phieu}`,
+      ghi_chu: `Cập nhật chi tiết kiỒm kê #${chiTietKiemKeId} của phiếu ${phieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -937,7 +1034,7 @@ const bulkUpdateChiTietKiemKe = async (actor, phieuKiemKeId, payload, context = 
       du_lieu_moi: {
         so_luong_cap_nhat: updatedItems.length,
       },
-      ghi_chu: `Cập nhật hàng loạt ${updatedItems.length} chi tiết kiểm kê của phiếu ${phieu.ma_phieu}`,
+      ghi_chu: `Cập nhật hàng loạt ${updatedItems.length} chi tiết kiỒm kê của phiếu ${phieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -954,6 +1051,7 @@ const bulkUpdateChiTietKiemKe = async (actor, phieuKiemKeId, payload, context = 
 };
 
 const hoanTatPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) => {
+  ensureCompletePermission(actor);
   const connection = await kiemKeRepository.getConnection();
 
   try {
@@ -965,17 +1063,21 @@ const hoanTatPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.CHO_XAC_NHAN) {
-      throw new AppError('Chỉ được hoàn tất khi phiếu đang ở trạng thái CHO_XAC_NHAN', 400);
+      throw new AppError('Ch�0 �ược hoàn tất khi phiếu �ang �x trạng thái CHO_XAC_NHAN', 400);
+    }
+
+    if (!currentPhieu.nguoi_xac_nhan_id) {
+      throw new AppError('Phiếu kiỒm kê chưa �ược xác nhận', 400);
     }
 
     const totalChiTiet = await kiemKeRepository.countChiTietKiemKeByPhieuId(phieuKiemKeId, {}, { connection });
     if (totalChiTiet <= 0) {
-      throw new AppError('Phiếu kiểm kê chưa có chi tiết thiết bị', 400);
+      throw new AppError('Phiếu kiỒm kê chưa có chi tiết thiết b�9', 400);
     }
 
     const pendingCount = await kiemKeRepository.countPendingChiTietByPhieuId(phieuKiemKeId, { connection });
     if (pendingCount > 0) {
-      throw new AppError('Không thể hoàn tất: còn thiết bị chưa nhập đủ kết quả kiểm kê', 400);
+      throw new AppError('Không thỒ hoàn tất: còn thiết b�9 chưa nhập �ủ kết quả kiỒm kê', 400);
     }
 
     const chiTietForSync = await kiemKeRepository.findChiTietForDongBoByPhieuId(phieuKiemKeId, { connection });
@@ -996,7 +1098,6 @@ const hoanTatPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =
     const now = new Date();
     await kiemKeRepository.updatePhieuKiemKeById(phieuKiemKeId, {
       trang_thai: PHIEU_TRANG_THAI.HOAN_TAT,
-      nguoi_xac_nhan_id: actor.nguoi_dung_id,
       thoi_diem_ket_thuc: now,
       ghi_chu: hasOwn(payload, 'ghi_chu') ? payload.ghi_chu : currentPhieu.ghi_chu,
     }, { connection });
@@ -1032,7 +1133,7 @@ const hoanTatPhieuKiemKe = async (actor, phieuKiemKeId, payload, context = {}) =
         ...updatedPhieu,
         dong_bo: dongBo,
       },
-      ghi_chu: `Hoàn tất phiếu kiểm kê ${updatedPhieu.ma_phieu}`,
+      ghi_chu: `Hoàn tất phiếu kiỒm kê ${updatedPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -1080,6 +1181,7 @@ module.exports = {
   getPhieuKiemKeList,
   getPhieuKiemKeDetail,
   updatePhieuKiemKe,
+  xacNhanPhieuKiemKe,
   chuyenTrangThaiPhieuKiemKe,
   huyPhieuKiemKe,
   getChiTietKiemKeList,
@@ -1088,3 +1190,5 @@ module.exports = {
   hoanTatPhieuKiemKe,
   getPhieuKiemKeHistory,
 };
+
+

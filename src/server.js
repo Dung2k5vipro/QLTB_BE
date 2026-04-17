@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 
 const app = require('./app');
 const { connectDB } = require('./configs/db.config');
@@ -13,7 +13,7 @@ const startServer = async () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error.message);
+    console.error('Khởi động máy chủ thất bại:', error.message);
     process.exit(1);
   }
 };

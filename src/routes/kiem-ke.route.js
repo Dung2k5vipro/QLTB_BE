@@ -7,8 +7,10 @@ const kiemKeValidation = require('../validations/kiemKe.validation');
 
 const router = express.Router();
 
-const READ_ROLES = ['ADMIN', 'NHAN_VIEN_THIET_BI', 'GIAO_VIEN'];
+const READ_ROLES = ['ADMIN', 'NHAN_VIEN_THIET_BI', 'NGUOI_DUYET', 'GIAO_VIEN'];
 const WRITE_ROLES = ['ADMIN', 'NHAN_VIEN_THIET_BI'];
+const CONFIRM_ROLES = ['ADMIN', 'NHAN_VIEN_THIET_BI'];
+const COMPLETE_ROLES = ['ADMIN', 'NGUOI_DUYET'];
 
 router.use(authMiddleware);
 
@@ -82,6 +84,14 @@ router.patch(
 );
 
 router.patch(
+  '/phieu-kiem-ke/:id/xac-nhan',
+  authorizeRoles(...CONFIRM_ROLES),
+  validate(kiemKeValidation.phieuKiemKeIdParam),
+  validate(kiemKeValidation.xacNhanPhieuKiemKe),
+  kiemKeController.xacNhanPhieuKiemKe,
+);
+
+router.patch(
   '/phieu-kiem-ke/:id/huy',
   authorizeRoles(...WRITE_ROLES),
   validate(kiemKeValidation.phieuKiemKeIdParam),
@@ -91,10 +101,11 @@ router.patch(
 
 router.patch(
   '/phieu-kiem-ke/:id/hoan-tat',
-  authorizeRoles(...WRITE_ROLES),
+  authorizeRoles(...COMPLETE_ROLES),
   validate(kiemKeValidation.phieuKiemKeIdParam),
   validate(kiemKeValidation.hoanTatPhieuKiemKe),
   kiemKeController.hoanTatPhieuKiemKe,
 );
 
 module.exports = router;
+

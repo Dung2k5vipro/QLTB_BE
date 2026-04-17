@@ -9,3 +9,4 @@ module.exports = createMasterDataService({
   uniqueFields: ['ma_loai', 'ma_viet_tat'],
   repository: loaiThietBiRepository,
 });
+

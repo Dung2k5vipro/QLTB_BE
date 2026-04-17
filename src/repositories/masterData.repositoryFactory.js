@@ -97,7 +97,7 @@ const createMasterDataRepository = ({
 
   const existsByField = async (fieldName, fieldValue, excludeId = null, { connection } = {}) => {
     if (!uniqueFields.includes(fieldName)) {
-      throw new Error(`Truong ${fieldName} khong nam trong uniqueFields cua ${tableName}`);
+      throw new Error(`Tr??ng ${fieldName} khong nam trong uniqueFields cua ${tableName}`);
     }
 
     const executor = resolveExecutor(connection);
@@ -130,7 +130,7 @@ const createMasterDataRepository = ({
     });
 
     if (!columns.length) {
-      throw new Error(`Khong co du lieu de tao ban ghi cho ${tableName}`);
+      throw new Error(`Kh?ng c? d? li?u de tao ban ghi cho ${tableName}`);
     }
 
     const sql = `
@@ -176,7 +176,7 @@ const createMasterDataRepository = ({
 
   const updateStatus = async (id, isActive, { connection } = {}) => {
     if (!hasIsActive) {
-      throw new Error(`Bang ${tableName} khong ho tro truong is_active`);
+      throw new Error(`B?ng ${tableName} kh?ng h? tr? tr??ng is_active`);
     }
 
     const executor = resolveExecutor(connection);
@@ -213,3 +213,4 @@ const createMasterDataRepository = ({
 module.exports = {
   createMasterDataRepository,
 };
+

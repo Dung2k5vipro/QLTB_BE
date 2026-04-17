@@ -19,12 +19,15 @@ const donViRoute = require('./don-vi.route');
 const baoTriRoute = require('./bao-tri.route');
 const baoHongRoute = require('./bao-hong.route');
 const dashboardRoute = require('./dashboard.route');
+const baoCaoRoute = require('./bao-cao.route');
+const nhatKyHeThongRoute = require('./nhat-ky-he-thong.route');
 
 const router = express.Router();
 
 router.use('/health', healthRoute);
 router.use('/auth', authRoute);
 router.use('/roles', roleRoute);
+router.use('/vai-tro', roleRoute);
 router.use('/users', userRoute);
 router.use('/thiet-bi', thietBiRoute);
 router.use('/loai-thiet-bi', loaiThietBiRoute);
@@ -41,5 +44,7 @@ router.use('/don-vi', donViRoute);
 router.use('/bao-tri', baoTriRoute);
 router.use('/bao-hong', baoHongRoute);
 router.use('/dashboard', dashboardRoute);
+router.use('/bao-cao', baoCaoRoute);
+router.use('/nhat-ky-he-thong', nhatKyHeThongRoute);
 
 module.exports = router;

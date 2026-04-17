@@ -9,7 +9,7 @@ const login = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Dang nhap thanh cong',
+    message: '??ng nh?p th?nh c?ng',
     data: result,
   });
 });
@@ -21,7 +21,7 @@ const bootstrapAdmin = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Bootstrap admin thanh cong',
+    message: 'Kh?i t?o admin th?nh c?ng',
     data: result,
   });
 });
@@ -30,7 +30,7 @@ const getMe = asyncHandler(async (req, res) => {
   const user = await authService.getCurrentUser(req.user.nguoi_dung_id);
 
   return sendSuccess(res, {
-    message: 'Lay thong tin nguoi dung thanh cong',
+    message: 'L?y th?ng tin ng??i d?ng th?nh c?ng',
     data: user,
   });
 });
@@ -62,3 +62,4 @@ module.exports = {
   logout,
   changePassword,
 };
+

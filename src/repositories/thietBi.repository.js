@@ -652,3 +652,5 @@ module.exports = {
   findTransferHistory,
   findStatusHistoryByDeviceId,
 };
+
+

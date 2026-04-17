@@ -4,12 +4,12 @@ const nhaCungCapService = require('../services/nhaCungCap.service');
 const controller = createMasterDataController({
   service: nhaCungCapService,
   messages: {
-    list: 'Lay danh sach nha cung cap thanh cong',
-    detail: 'Lay chi tiet nha cung cap thanh cong',
-    create: 'Tao nha cung cap thanh cong',
-    update: 'Cap nhat nha cung cap thanh cong',
-    updateStatus: 'Cap nhat trang thai nha cung cap thanh cong',
-    statusUnchanged: 'Trang thai nha cung cap khong thay doi',
+    list: 'L?y danh s?ch nh? cung c?p th?nh c?ng',
+    detail: 'L?y chi ti?t nh? cung c?p th?nh c?ng',
+    create: 'T?o nh? cung c?p th?nh c?ng',
+    update: 'C?p nh?t nh? cung c?p th?nh c?ng',
+    updateStatus: 'C?p nh?t tr?ng th?i nh? cung c?p th?nh c?ng',
+    statusUnchanged: 'Tr?ng th?i nh? cung c?p kh?ng thay ??i',
   },
 });
 
@@ -20,3 +20,5 @@ module.exports = {
   updateNhaCungCap: controller.update,
   updateNhaCungCapStatus: controller.updateStatus,
 };
+
+

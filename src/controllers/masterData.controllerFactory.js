@@ -71,3 +71,4 @@ const createMasterDataController = ({
 module.exports = {
   createMasterDataController,
 };
+

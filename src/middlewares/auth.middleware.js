@@ -17,7 +17,7 @@ const authMiddleware = asyncHandler(async (req, _res, next) => {
   const token = extractBearerToken(req.headers.authorization);
 
   if (!token) {
-    throw new AppError('Thieu token xac thuc', 401);
+    throw new AppError('Thiếu token xác thực', 401);
   }
 
   let decodedToken;
@@ -27,24 +27,24 @@ const authMiddleware = asyncHandler(async (req, _res, next) => {
     });
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      throw new AppError('Token da het han', 401);
+      throw new AppError('Token đã hết hạn', 401);
     }
 
-    throw new AppError('Token khong hop le', 401);
+    throw new AppError('Token không hợp lệ', 401);
   }
 
   const nguoiDungId = Number(decodedToken.nguoi_dung_id);
   if (!Number.isInteger(nguoiDungId) || nguoiDungId <= 0) {
-    throw new AppError('Token payload khong hop le', 401);
+    throw new AppError('Token payload không hợp lệ', 401);
   }
 
   const user = await userRepository.findById(nguoiDungId);
   if (!user) {
-    throw new AppError('Nguoi dung khong ton tai', 401);
+    throw new AppError('Người dùng không tồn tại', 401);
   }
 
   if (String(user.trang_thai_tai_khoan || '').toUpperCase() !== 'ACTIVE') {
-    throw new AppError('Tai khoan khong con hieu luc', 403);
+    throw new AppError('Tài khoản không còn hiệu lực', 403);
   }
 
   req.user = user;

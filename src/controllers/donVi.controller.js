@@ -7,7 +7,7 @@ const getDonVi = asyncHandler(async (req, res) => {
   const result = await donViService.getDonViList(req.query);
 
   return sendSuccess(res, {
-    message: 'Lay danh sach don vi thanh cong',
+    message: 'L?y danh s?ch ??n v? th?nh c?ng',
     data: result.items,
     meta: result.pagination,
   });
@@ -17,7 +17,7 @@ const getOptions = asyncHandler(async (req, res) => {
   const options = await donViService.getDonViOptions(req.query);
 
   return sendSuccess(res, {
-    message: 'Lay danh sach don vi options thanh cong',
+    message: 'L?y danh s?ch ??n v? options th?nh c?ng',
     data: options,
   });
 });
@@ -26,7 +26,7 @@ const getDonViById = asyncHandler(async (req, res) => {
   const donVi = await donViService.getDonViById(req.params.id);
 
   return sendSuccess(res, {
-    message: 'Lay chi tiet don vi thanh cong',
+    message: 'L?y chi ti?t ??n v? th?nh c?ng',
     data: donVi,
   });
 });
@@ -38,7 +38,7 @@ const createDonVi = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Tao don vi thanh cong',
+    message: 'T?o ??n v? th?nh c?ng',
     data: createdDonVi,
   });
 });
@@ -49,7 +49,7 @@ const updateDonVi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Cap nhat don vi thanh cong',
+    message: 'C?p nh?t ??n v? th?nh c?ng',
     data: updatedDonVi,
   });
 });
@@ -60,7 +60,7 @@ const updateDonViStatus = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: result.changed ? 'Cap nhat trang thai don vi thanh cong' : 'Trang thai don vi khong thay doi',
+    message: result.changed ? 'C?p nh?t tr?ng th?i ??n v? th?nh c?ng' : 'Tr?ng th?i ??n v? kh?ng thay ??i',
     data: result.donVi,
   });
 });
@@ -73,3 +73,5 @@ module.exports = {
   updateDonVi,
   updateDonViStatus,
 };
+
+

@@ -37,7 +37,7 @@ const getNhaCungCapQuery = {
 
 const createNhaCungCap = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
     assertOnlyAllowedKeys(body, ALLOWED_CREATE_FIELDS);
 
     return {
@@ -56,9 +56,9 @@ const createNhaCungCap = {
 
 const updateNhaCungCap = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
     assertOnlyAllowedKeys(body, ALLOWED_UPDATE_FIELDS);
-    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'Can it nhat 1 truong de cap nhat');
+    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'C?n ?t nh?t 1 tr??ng de cap nhat');
 
     const payload = {};
 
@@ -100,3 +100,4 @@ module.exports = {
   updateNhaCungCap,
   updateNhaCungCapStatus,
 };
+

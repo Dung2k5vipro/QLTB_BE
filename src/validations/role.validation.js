@@ -1,0 +1,193 @@
+const AppError = require('../utils/appError');
+
+const SORT_FIELDS = ['created_at', 'updated_at', 'ma_vai_tro', 'ten_vai_tro', 'is_active'];
+const SORT_ORDERS = ['ASC', 'DESC'];
+const CREATE_FIELDS = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta'];
+const UPDATE_FIELDS = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta'];
+
+const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
+
+const requireObject = (value, message = 'D� li�u kh�ng h�p l�') => {
+  if (!isObject(value)) {
+    throw new AppError(message, 400);
+  }
+};
+
+const assertOnlyAllowedKeys = (payload, allowedFields) => {
+  const invalidFields = Object.keys(payload).filter((key) => !allowedFields.includes(key));
+  if (invalidFields.length) {
+    throw new AppError(`Kh�ng h� tr� tr��ng: ${invalidFields.join(', ')}`, 400);
+  }
+};
+
+const ensureAtLeastOneField = (payload, fields, message) => {
+  const hasAnyField = fields.some((field) => Object.prototype.hasOwnProperty.call(payload, field));
+  if (!hasAnyField) {
+    throw new AppError(message, 400);
+  }
+};
+
+const toPositiveInt = (value, fieldName) => {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new AppError(`${fieldName} ph�i l� s� nguy�n d��ng`, 400);
+  }
+
+  return parsed;
+};
+
+const toNonEmptyString = (value, fieldName, maxLength = 255, { toUpperCase = false } = {}) => {
+  if (typeof value !== 'string') {
+    throw new AppError(`${fieldName} ph�i l� chu�i`, 400);
+  }
+
+  let normalized = value.trim();
+  if (!normalized) {
+    throw new AppError(`${fieldName} kh�ng ��c � tr�ng`, 400);
+  }
+  if (normalized.length > maxLength) {
+    throw new AppError(`${fieldName} v��t qu� � d�i t�i a ${maxLength}`, 400);
+  }
+
+  if (toUpperCase) normalized = normalized.toUpperCase();
+  return normalized;
+};
+
+const toNullableString = (value, fieldName, maxLength = 500) => {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (typeof value !== 'string') {
+    throw new AppError(`${fieldName} ph�i l� chu�i`, 400);
+  }
+
+  const normalized = value.trim();
+  if (!normalized) return null;
+  if (normalized.length > maxLength) {
+    throw new AppError(`${fieldName} v��t qu� � d�i t�i a ${maxLength}`, 400);
+  }
+
+  return normalized;
+};
+
+const toIsActiveFlag = (value, fieldName = 'is_active') => {
+  if (typeof value === 'boolean') return value ? 1 : 0;
+  if (typeof value === 'number') {
+    if (value === 1) return 1;
+    if (value === 0) return 0;
+  }
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === '1' || normalized === 'true') return 1;
+    if (normalized === '0' || normalized === 'false') return 0;
+  }
+
+  throw new AppError(`${fieldName} ph�i l� boolean`, 400);
+};
+
+const roleIdParam = {
+  params: (params) => {
+    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    return {
+      id: toPositiveInt(params.id, 'id'),
+    };
+  },
+};
+
+const getRoleQuery = {
+  query: (query) => {
+    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    assertOnlyAllowedKeys(query, ['page', 'limit', 'keyword', 'isActive', 'sortBy', 'sortOrder']);
+
+    const page = query.page === undefined ? 1 : toPositiveInt(query.page, 'page');
+    const limit = query.limit === undefined ? 20 : toPositiveInt(query.limit, 'limit');
+    if (limit > 100) {
+      throw new AppError('limit t�i a l� 100', 400);
+    }
+
+    const sortBy = query.sortBy ? toNonEmptyString(query.sortBy, 'sortBy', 64) : 'created_at';
+    const sortOrder = query.sortOrder ? toNonEmptyString(query.sortOrder, 'sortOrder', 4, { toUpperCase: true }) : 'DESC';
+
+    if (!SORT_FIELDS.includes(sortBy)) {
+      throw new AppError(`sortBy ch� h� tr�: ${SORT_FIELDS.join(', ')}`, 400);
+    }
+    if (!SORT_ORDERS.includes(sortOrder)) {
+      throw new AppError('sortOrder ch� h� tr� ASC ho�c DESC', 400);
+    }
+
+    let isActive;
+    if (query.isActive !== undefined) {
+      isActive = toIsActiveFlag(query.isActive, 'isActive');
+    }
+
+    return {
+      page,
+      limit,
+      keyword: query.keyword ? toNonEmptyString(query.keyword, 'keyword', 255) : undefined,
+      isActive,
+      sortBy,
+      sortOrder,
+    };
+  },
+};
+
+const createRole = {
+  body: (body) => {
+    requireObject(body, 'Body kh�ng h�p l�');
+    assertOnlyAllowedKeys(body, CREATE_FIELDS);
+
+    return {
+      ma_vai_tro: toNonEmptyString(body.ma_vai_tro, 'ma_vai_tro', 50, { toUpperCase: true }),
+      ten_vai_tro: toNonEmptyString(body.ten_vai_tro, 'ten_vai_tro', 255),
+      mo_ta: toNullableString(body.mo_ta, 'mo_ta', 500),
+      is_active: 1,
+    };
+  },
+};
+
+const updateRole = {
+  body: (body) => {
+    requireObject(body, 'Body kh�ng h�p l�');
+    assertOnlyAllowedKeys(body, UPDATE_FIELDS);
+    ensureAtLeastOneField(body, UPDATE_FIELDS, 'C�n �t nh�t 1 tr��ng � c�p nh�t');
+
+    const payload = {};
+    if (Object.prototype.hasOwnProperty.call(body, 'ma_vai_tro')) {
+      payload.ma_vai_tro = toNonEmptyString(body.ma_vai_tro, 'ma_vai_tro', 50, { toUpperCase: true });
+    }
+    if (Object.prototype.hasOwnProperty.call(body, 'ten_vai_tro')) {
+      payload.ten_vai_tro = toNonEmptyString(body.ten_vai_tro, 'ten_vai_tro', 255);
+    }
+    if (Object.prototype.hasOwnProperty.call(body, 'mo_ta')) {
+      payload.mo_ta = toNullableString(body.mo_ta, 'mo_ta', 500);
+    }
+
+    return payload;
+  },
+};
+
+const updateRoleStatus = {
+  body: (body) => {
+    requireObject(body, 'Body kh�ng h�p l�');
+    assertOnlyAllowedKeys(body, ['is_active', 'isActive']);
+
+    if (!Object.prototype.hasOwnProperty.call(body, 'is_active') && !Object.prototype.hasOwnProperty.call(body, 'isActive')) {
+      throw new AppError('is_active l� b�t bu�c', 400);
+    }
+
+    return {
+      is_active: toIsActiveFlag(
+        Object.prototype.hasOwnProperty.call(body, 'is_active') ? body.is_active : body.isActive,
+        'is_active',
+      ),
+    };
+  },
+};
+
+module.exports = {
+  roleIdParam,
+  getRoleQuery,
+  createRole,
+  updateRole,
+  updateRoleStatus,
+};
+

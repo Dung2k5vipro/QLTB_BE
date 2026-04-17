@@ -21,3 +21,5 @@ router.patch('/:id/status', authorizeRoles('ADMIN'), validate(userValidation.use
 router.patch('/:id/reset-password', authorizeRoles('ADMIN'), validate(userValidation.userIdParam), validate(userValidation.resetUserPassword), userController.resetUserPassword);
 
 module.exports = router;
+
+

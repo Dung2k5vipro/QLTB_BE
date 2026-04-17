@@ -4,12 +4,12 @@ const tinhTrangKiemKeService = require('../services/tinhTrangKiemKe.service');
 const controller = createMasterDataController({
   service: tinhTrangKiemKeService,
   messages: {
-    list: 'Lay danh sach tinh trang kiem ke thanh cong',
-    detail: 'Lay chi tiet tinh trang kiem ke thanh cong',
-    create: 'Tao tinh trang kiem ke thanh cong',
-    update: 'Cap nhat tinh trang kiem ke thanh cong',
-    updateStatus: 'Cap nhat trang thai tinh trang kiem ke thanh cong',
-    statusUnchanged: 'Trang thai tinh trang kiem ke khong thay doi',
+    list: 'L?y danh s?ch t?nh tr?ng ki?m k? th?nh c?ng',
+    detail: 'L?y chi ti?t t?nh tr?ng ki?m k? th?nh c?ng',
+    create: 'T?o t?nh tr?ng ki?m k? th?nh c?ng',
+    update: 'C?p nh?t t?nh tr?ng ki?m k? th?nh c?ng',
+    updateStatus: 'C?p nh?t tr?ng th?i t?nh tr?ng ki?m k? th?nh c?ng',
+    statusUnchanged: 'Tr?ng th?i t?nh tr?ng ki?m k? kh?ng thay ??i',
   },
 });
 
@@ -20,3 +20,5 @@ module.exports = {
   updateTinhTrangKiemKe: controller.update,
   updateTinhTrangKiemKeStatus: controller.updateStatus,
 };
+
+

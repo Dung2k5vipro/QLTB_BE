@@ -642,3 +642,4 @@ module.exports = {
   createDeviceStatusHistory,
   createSystemLog,
 };
+

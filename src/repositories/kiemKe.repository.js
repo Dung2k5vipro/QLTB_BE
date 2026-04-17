@@ -452,12 +452,18 @@ const countPendingChiTietByPhieuId = async (phieuKiemKeId, { connection } = {}) 
   const executor = resolveExecutor(connection);
   const sql = `
     SELECT COUNT(*) AS total
-    FROM chi_tiet_kiem_ke
+    FROM chi_tiet_kiem_ke ctkk
+    LEFT JOIN tinh_trang_kiem_ke ttkk ON ttkk.tinh_trang_kiem_ke_id = ctkk.tinh_trang_kiem_ke_id
     WHERE phieu_kiem_ke_id = ?
       AND (
-        tinh_trang_kiem_ke_id IS NULL
-        OR nguoi_kiem_ke_id IS NULL
-        OR thoi_gian_kiem_ke IS NULL
+        ctkk.tinh_trang_kiem_ke_id IS NULL
+        OR ctkk.nguoi_kiem_ke_id IS NULL
+        OR ctkk.thoi_gian_kiem_ke IS NULL
+        OR REPLACE(REPLACE(REPLACE(REPLACE(UPPER(IFNULL(ttkk.ma_tinh_trang, '')), '_', ''), '-', ''), ' ', ''), '.', '') IN (
+          'CHUAKIEMKE',
+          'CHUACOKETQUA',
+          'CHOKIEMKE'
+        )
       )
   `;
   const [rows] = await executor.query(sql, [phieuKiemKeId]);
@@ -555,6 +561,42 @@ const findActiveTinhTrangKiemKeList = async ({ connection } = {}) => {
   `;
   const [rows] = await executor.query(sql);
   return rows;
+};
+
+const ensureDefaultTinhTrangKiemKe = async ({ connection } = {}) => {
+  const executor = resolveExecutor(connection);
+  const defaultCode = 'CHUA_KIEM_KE';
+  const defaultName = 'Chưa kiểm kê';
+  const defaultDescription = 'Trạng thái đầu kỳ mặc định cho chi tiết kiểm kê mới';
+
+  const existing = await findTinhTrangKiemKeByCode(defaultCode, { connection });
+  if (existing) {
+    await executor.query(
+      `
+        UPDATE tinh_trang_kiem_ke
+        SET ten_tinh_trang = ?, mo_ta = ?, is_active = 1
+        WHERE tinh_trang_kiem_ke_id = ?
+      `,
+      [defaultName, defaultDescription, existing.tinh_trang_kiem_ke_id],
+    );
+
+    return findTinhTrangKiemKeByCode(defaultCode, { connection });
+  }
+
+  await executor.query(
+    `
+      INSERT INTO tinh_trang_kiem_ke (
+        ma_tinh_trang,
+        ten_tinh_trang,
+        mo_ta,
+        is_active
+      )
+      VALUES (?, ?, ?, 1)
+    `,
+    [defaultCode, defaultName, defaultDescription],
+  );
+
+  return findTinhTrangKiemKeByCode(defaultCode, { connection });
 };
 
 const findTrangThaiThietBiList = async ({ connection, activeOnly = false } = {}) => {
@@ -713,6 +755,7 @@ module.exports = {
   findTinhTrangKiemKeById,
   findTinhTrangKiemKeByCode,
   findActiveTinhTrangKiemKeList,
+  ensureDefaultTinhTrangKiemKe,
   findTrangThaiThietBiList,
   findDeviceById,
   updateDeviceById,
@@ -720,3 +763,4 @@ module.exports = {
   countNhatKyByPhieuId,
   findNhatKyByPhieuId,
 };
+

@@ -1,4 +1,4 @@
-const sendSuccess = (res, { statusCode = 200, message = 'Success', data, meta } = {}) => {
+const sendSuccess = (res, { statusCode = 200, message = 'Thành công', data, meta } = {}) => {
   const payload = {
     success: true,
     message,

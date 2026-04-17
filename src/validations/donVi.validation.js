@@ -20,7 +20,7 @@ const ALLOWED_UPDATE_FIELDS = [...ALLOWED_CREATE_FIELDS];
 const toLoaiDonVi = (value, fieldName = 'loai_don_vi') => {
   const normalized = toNonEmptyString(value, fieldName, 50, { toUpperCase: true });
   if (!LOAI_DON_VI_ENUMS.includes(normalized)) {
-    throw new AppError(`${fieldName} khong hop le`, 400);
+    throw new AppError(`${fieldName} kh?ng h?p l?`, 400);
   }
 
   return normalized;
@@ -66,7 +66,7 @@ const getDonViQuery = {
 
 const getDonViOptionsQuery = {
   query: (query) => {
-    requireObject(query, 'Query khong hop le');
+    requireObject(query, 'Query kh?ng h?p l?');
 
     const keyword = query.keyword ? toNonEmptyString(query.keyword, 'keyword', 255) : undefined;
 
@@ -96,7 +96,7 @@ const getDonViOptionsQuery = {
 
 const createDonVi = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
     assertOnlyAllowedKeys(body, ALLOWED_CREATE_FIELDS);
 
     return {
@@ -113,9 +113,9 @@ const createDonVi = {
 
 const updateDonVi = {
   body: (body) => {
-    requireObject(body, 'Body khong hop le');
+    requireObject(body, 'Body kh?ng h?p l?');
     assertOnlyAllowedKeys(body, ALLOWED_UPDATE_FIELDS);
-    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'Can it nhat 1 truong de cap nhat');
+    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'C?n ?t nh?t 1 tr??ng de cap nhat');
 
     const payload = {};
 
@@ -153,3 +153,4 @@ module.exports = {
   updateDonVi,
   updateDonViStatus,
 };
+

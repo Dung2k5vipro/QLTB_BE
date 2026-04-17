@@ -73,7 +73,7 @@ const tuChoiPhieuBaoHong = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Từ chối phiếu báo hỏng thành công',
+    message: 'Từ ch�i phiếu báo hỏng thành công',
     data: updated,
   });
 });
@@ -110,3 +110,4 @@ module.exports = {
   huyPhieuBaoHong,
   getNhatKyBaoTriList,
 };
+

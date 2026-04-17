@@ -31,7 +31,7 @@ const authorizeRoles = (...roles) => {
 
     const currentRole = getCurrentRole(req);
     if (!currentRole || !allowedRoles.includes(currentRole)) {
-      writeForbiddenLog(req, `Role ${currentRole || 'UNKNOWN'} khong duoc truy cap`);
+      writeForbiddenLog(req, `Role ${currentRole || 'UNKNOWN'} không được truy cập`);
       throw new AppError('Bạn không có quyền truy cập', 403);
     }
 
@@ -57,7 +57,7 @@ const authorizeSelfOrAdmin = (paramKey = 'id') => {
       return next();
     }
 
-    writeForbiddenLog(req, `User ${selfId} khong duoc truy cap tai nguyen ${targetId}`);
+    writeForbiddenLog(req, `User ${selfId} không được truy cập tài nguyên ${targetId}`);
     throw new AppError('Bạn không có quyền truy cập', 403);
   };
 };

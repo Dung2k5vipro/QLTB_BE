@@ -1,0 +1,321 @@
+﻿◇ injected env (9) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+
+=== TABLE chi_tiet_kiem_ke ===
+chi_tiet_kiem_ke_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+phieu_kiem_ke_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+tinh_trang_kiem_ke_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+don_vi_thuc_te_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+nguoi_kiem_ke_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+thoi_gian_kiem_ke	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+don_vi_thuc_te_id -> don_vi.don_vi_id
+nguoi_kiem_ke_id -> nguoi_dung.nguoi_dung_id
+phieu_kiem_ke_id -> phieu_kiem_ke.phieu_kiem_ke_id
+thiet_bi_id -> thiet_bi.thiet_bi_id
+tinh_trang_kiem_ke_id -> tinh_trang_kiem_ke.tinh_trang_kiem_ke_id
+
+=== TABLE chi_tiet_thanh_ly ===
+chi_tiet_thanh_ly_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+phieu_thanh_ly_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+ly_do_thanh_ly_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+tinh_trang_hien_tai	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+chi_phi_sua_chua_da_phat_sinh	decimal(18,2)	NULL:NO	DEF:0.00	KEY:	EXTRA:
+gia_tri_thu_hoi_du_kien	decimal(18,2)	NULL:NO	DEF:0.00	KEY:	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+FKS
+ly_do_thanh_ly_id -> ly_do_thanh_ly.ly_do_thanh_ly_id
+phieu_thanh_ly_id -> phieu_thanh_ly.phieu_thanh_ly_id
+thiet_bi_id -> thiet_bi.thiet_bi_id
+
+=== TABLE don_vi ===
+don_vi_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_don_vi	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_don_vi	varchar(255)	NULL:NO	DEF:null	KEY:	EXTRA:
+loai_don_vi	enum('PHONG_HOC','PHONG_BAN','KHOI','KHOA','KHO','KHAC')	NULL:NO	DEF:null	KEY:	EXTRA:
+parent_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+dia_diem	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+parent_id -> don_vi.don_vi_id
+
+=== TABLE don_vi_sua_chua ===
+don_vi_sua_chua_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_dvsc	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_dvsc	varchar(200)	NULL:NO	DEF:null	KEY:	EXTRA:
+nguoi_lien_he	varchar(150)	NULL:YES	DEF:null	KEY:	EXTRA:
+so_dien_thoai	varchar(20)	NULL:YES	DEF:null	KEY:	EXTRA:
+email	varchar(150)	NULL:YES	DEF:null	KEY:	EXTRA:
+dia_chi	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+
+=== TABLE hang_san_xuat ===
+hang_san_xuat_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_hang	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_hang	varchar(150)	NULL:NO	DEF:null	KEY:	EXTRA:
+quoc_gia	varchar(100)	NULL:YES	DEF:null	KEY:	EXTRA:
+website	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+
+=== TABLE lich_su_ban_giao_dieu_chuyen ===
+lich_su_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+loai_nghiep_vu	enum('CAP_PHAT','BAN_GIAO','DIEU_CHUYEN','THU_HOI')	NULL:NO	DEF:null	KEY:	EXTRA:
+tu_don_vi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+den_don_vi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+tu_nguoi_phu_trach_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+den_nguoi_phu_trach_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ly_do	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+thoi_gian_thuc_hien	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+created_by	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+FKS
+created_by -> nguoi_dung.nguoi_dung_id
+den_don_vi_id -> don_vi.don_vi_id
+den_nguoi_phu_trach_id -> nguoi_dung.nguoi_dung_id
+thiet_bi_id -> thiet_bi.thiet_bi_id
+tu_don_vi_id -> don_vi.don_vi_id
+tu_nguoi_phu_trach_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE lich_su_trang_thai_thiet_bi ===
+lich_su_trang_thai_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+tu_trang_thai_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+den_trang_thai_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+loai_nguon_phat_sinh	varchar(50)	NULL:YES	DEF:null	KEY:	EXTRA:
+nguon_phat_sinh_id	bigint unsigned	NULL:YES	DEF:null	KEY:	EXTRA:
+ly_do	text	NULL:YES	DEF:null	KEY:	EXTRA:
+changed_by	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+changed_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+FKS
+changed_by -> nguoi_dung.nguoi_dung_id
+den_trang_thai_id -> trang_thai_thiet_bi.trang_thai_thiet_bi_id
+thiet_bi_id -> thiet_bi.thiet_bi_id
+tu_trang_thai_id -> trang_thai_thiet_bi.trang_thai_thiet_bi_id
+
+=== TABLE loai_thiet_bi ===
+loai_thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_loai	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ma_viet_tat	varchar(10)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_loai	varchar(150)	NULL:NO	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+
+=== TABLE ly_do_thanh_ly ===
+ly_do_thanh_ly_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_ly_do	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_ly_do	varchar(150)	NULL:NO	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+
+=== TABLE muc_do_uu_tien ===
+muc_do_uu_tien_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_muc_do	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_muc_do	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+muc_do_so	int	NULL:NO	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+
+=== TABLE nguoi_dung ===
+nguoi_dung_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+vai_tro_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+don_vi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ten_dang_nhap	varchar(100)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+mat_khau_hash	varchar(255)	NULL:NO	DEF:null	KEY:	EXTRA:
+ho_ten	varchar(150)	NULL:NO	DEF:null	KEY:	EXTRA:
+email	varchar(150)	NULL:YES	DEF:null	KEY:UNI	EXTRA:
+so_dien_thoai	varchar(20)	NULL:YES	DEF:null	KEY:UNI	EXTRA:
+trang_thai_tai_khoan	enum('ACTIVE','LOCKED','INACTIVE')	NULL:NO	DEF:ACTIVE	KEY:	EXTRA:
+ghi_chu	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+don_vi_id -> don_vi.don_vi_id
+vai_tro_id -> vai_tro.vai_tro_id
+
+=== TABLE nha_cung_cap ===
+nha_cung_cap_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_ncc	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_ncc	varchar(200)	NULL:NO	DEF:null	KEY:	EXTRA:
+nguoi_lien_he	varchar(150)	NULL:YES	DEF:null	KEY:	EXTRA:
+so_dien_thoai	varchar(20)	NULL:YES	DEF:null	KEY:	EXTRA:
+email	varchar(150)	NULL:YES	DEF:null	KEY:	EXTRA:
+dia_chi	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+ma_so_thue	varchar(50)	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+
+=== TABLE nhat_ky_bao_tri ===
+nhat_ky_bao_tri_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+phieu_bao_hong_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+loai_xu_ly	enum('SUA_CHUA','BAO_TRI_DINH_KY','BAO_TRI_DOT_XUAT','KHAC')	NULL:NO	DEF:SUA_CHUA	KEY:	EXTRA:
+ngay_tiep_nhan	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+ngay_hoan_thanh	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+noi_dung_xu_ly	text	NULL:YES	DEF:null	KEY:	EXTRA:
+chi_phi	decimal(18,2)	NULL:NO	DEF:0.00	KEY:	EXTRA:
+phu_tung_thay_the	json	NULL:YES	DEF:null	KEY:	EXTRA:
+don_vi_sua_chua_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ket_qua_xu_ly	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+thuc_hien_boi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+don_vi_sua_chua_id -> don_vi_sua_chua.don_vi_sua_chua_id
+phieu_bao_hong_id -> phieu_bao_hong.phieu_bao_hong_id
+thiet_bi_id -> thiet_bi.thiet_bi_id
+thuc_hien_boi_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE nhat_ky_he_thong ===
+nhat_ky_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+nguoi_dung_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+module	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+hanh_dong	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+entity_name	varchar(100)	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+entity_id	bigint unsigned	NULL:YES	DEF:null	KEY:	EXTRA:
+du_lieu_cu	json	NULL:YES	DEF:null	KEY:	EXTRA:
+du_lieu_moi	json	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+ip_address	varchar(45)	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:MUL	EXTRA:DEFAULT_GENERATED
+FKS
+nguoi_dung_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE phieu_bao_hong ===
+phieu_bao_hong_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_phieu	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+nguoi_tao_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+don_vi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+muc_do_uu_tien_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+mo_ta_su_co	text	NULL:NO	DEF:null	KEY:	EXTRA:
+hinh_anh_dinh_kem	json	NULL:YES	DEF:null	KEY:	EXTRA:
+thoi_gian_phat_hien	datetime	NULL:NO	DEF:null	KEY:	EXTRA:
+trang_thai	enum('CHO_XU_LY','DA_TIEP_NHAN','DANG_XU_LY','CHO_LINH_KIEN','HOAN_THANH','TU_CHOI','HUY')	NULL:NO	DEF:CHO_XU_LY	KEY:	EXTRA:
+nguoi_tiep_nhan_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+thoi_gian_tiep_nhan	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+nguoi_dong_phieu_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+thoi_gian_dong	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+ly_do_tu_choi_hoac_huy	text	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:MUL	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+open_device_id	bigint unsigned	NULL:YES	DEF:null	KEY:UNI	EXTRA:STORED GENERATED
+FKS
+don_vi_id -> don_vi.don_vi_id
+muc_do_uu_tien_id -> muc_do_uu_tien.muc_do_uu_tien_id
+nguoi_dong_phieu_id -> nguoi_dung.nguoi_dung_id
+nguoi_tao_id -> nguoi_dung.nguoi_dung_id
+nguoi_tiep_nhan_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE phieu_kiem_ke ===
+phieu_kiem_ke_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_phieu	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_dot_kiem_ke	varchar(255)	NULL:NO	DEF:null	KEY:	EXTRA:
+loai_pham_vi	enum('TOAN_TRUONG','THEO_DON_VI')	NULL:NO	DEF:THEO_DON_VI	KEY:	EXTRA:
+don_vi_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+thoi_diem_bat_dau	datetime	NULL:NO	DEF:null	KEY:	EXTRA:
+thoi_diem_ket_thuc	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+trang_thai	enum('NHAP','DANG_KIEM_KE','CHO_XAC_NHAN','HOAN_TAT','HUY')	NULL:NO	DEF:NHAP	KEY:MUL	EXTRA:
+nguoi_tao_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+nguoi_xac_nhan_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+don_vi_id -> don_vi.don_vi_id
+nguoi_tao_id -> nguoi_dung.nguoi_dung_id
+nguoi_xac_nhan_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE phieu_thanh_ly ===
+phieu_thanh_ly_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_phieu	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+nguoi_tao_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+ngay_de_xuat	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+trang_thai	enum('NHAP','CHO_DUYET','DA_DUYET','TU_CHOI','HOAN_TAT','HUY')	NULL:NO	DEF:NHAP	KEY:MUL	EXTRA:
+nguoi_duyet_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ngay_duyet	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+nguoi_hoan_tat_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ngay_hoan_tat	datetime	NULL:YES	DEF:null	KEY:	EXTRA:
+ly_do_tu_choi	text	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+nguoi_duyet_id -> nguoi_dung.nguoi_dung_id
+nguoi_hoan_tat_id -> nguoi_dung.nguoi_dung_id
+nguoi_tao_id -> nguoi_dung.nguoi_dung_id
+
+=== TABLE thiet_bi ===
+thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_tai_san	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_thiet_bi	varchar(255)	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+loai_thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+hang_san_xuat_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+model	varchar(100)	NULL:YES	DEF:null	KEY:	EXTRA:
+so_serial	varchar(150)	NULL:YES	DEF:null	KEY:UNI	EXTRA:
+nha_cung_cap_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+ngay_mua	date	NULL:YES	DEF:null	KEY:	EXTRA:
+ngay_het_bao_hanh	date	NULL:YES	DEF:null	KEY:	EXTRA:
+gia_tri_mua	decimal(18,2)	NULL:NO	DEF:0.00	KEY:	EXTRA:
+don_vi_hien_tai_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+nguoi_phu_trach_id	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+trang_thai_thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:MUL	EXTRA:
+tinh_trang_hien_tai	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+ghi_chu	text	NULL:YES	DEF:null	KEY:	EXTRA:
+created_by	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+updated_by	bigint unsigned	NULL:YES	DEF:null	KEY:MUL	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+FKS
+created_by -> nguoi_dung.nguoi_dung_id
+don_vi_hien_tai_id -> don_vi.don_vi_id
+hang_san_xuat_id -> hang_san_xuat.hang_san_xuat_id
+loai_thiet_bi_id -> loai_thiet_bi.loai_thiet_bi_id
+nguoi_phu_trach_id -> nguoi_dung.nguoi_dung_id
+nha_cung_cap_id -> nha_cung_cap.nha_cung_cap_id
+trang_thai_thiet_bi_id -> trang_thai_thiet_bi.trang_thai_thiet_bi_id
+updated_by -> nguoi_dung.nguoi_dung_id
+
+=== TABLE tinh_trang_kiem_ke ===
+tinh_trang_kiem_ke_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_tinh_trang	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_tinh_trang	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+
+=== TABLE trang_thai_thiet_bi ===
+trang_thai_thiet_bi_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_trang_thai	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_trang_thai	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+is_terminal	tinyint(1)	NULL:NO	DEF:0	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+thu_tu_hien_thi	int	NULL:NO	DEF:0	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+
+=== TABLE vai_tro ===
+vai_tro_id	bigint unsigned	NULL:NO	DEF:null	KEY:PRI	EXTRA:auto_increment
+ma_vai_tro	varchar(50)	NULL:NO	DEF:null	KEY:UNI	EXTRA:
+ten_vai_tro	varchar(100)	NULL:NO	DEF:null	KEY:	EXTRA:
+mo_ta	varchar(255)	NULL:YES	DEF:null	KEY:	EXTRA:
+is_active	tinyint(1)	NULL:NO	DEF:1	KEY:	EXTRA:
+created_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED
+updated_at	datetime	NULL:NO	DEF:CURRENT_TIMESTAMP	KEY:	EXTRA:DEFAULT_GENERATED on update CURRENT_TIMESTAMP

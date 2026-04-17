@@ -52,3 +52,4 @@ module.exports = createMasterDataRepository({
   hasUpdatedAt: true,
   hasIsActive: true,
 });
+

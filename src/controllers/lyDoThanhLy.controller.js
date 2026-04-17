@@ -4,12 +4,12 @@ const lyDoThanhLyService = require('../services/lyDoThanhLy.service');
 const controller = createMasterDataController({
   service: lyDoThanhLyService,
   messages: {
-    list: 'Lay danh sach ly do thanh ly thanh cong',
-    detail: 'Lay chi tiet ly do thanh ly thanh cong',
-    create: 'Tao ly do thanh ly thanh cong',
-    update: 'Cap nhat ly do thanh ly thanh cong',
-    updateStatus: 'Cap nhat trang thai ly do thanh ly thanh cong',
-    statusUnchanged: 'Trang thai ly do thanh ly khong thay doi',
+    list: 'L?y danh s?ch l? do thanh l? th?nh c?ng',
+    detail: 'L?y chi ti?t l? do thanh l? th?nh c?ng',
+    create: 'T?o l? do thanh l? th?nh c?ng',
+    update: 'C?p nh?t l? do thanh l? th?nh c?ng',
+    updateStatus: 'C?p nh?t tr?ng th?i l? do thanh l? th?nh c?ng',
+    statusUnchanged: 'Tr?ng th?i l? do thanh l? kh?ng thay ??i',
   },
 });
 
@@ -20,3 +20,5 @@ module.exports = {
   updateLyDoThanhLy: controller.update,
   updateLyDoThanhLyStatus: controller.updateStatus,
 };
+
+

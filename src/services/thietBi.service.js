@@ -43,12 +43,12 @@ const assertPurchaseDateAndWarranty = ({ ngayMua, ngayHetBaoHanh }) => {
   if (normalizedNgayMua) {
     const today = new Date().toISOString().slice(0, 10);
     if (normalizedNgayMua > today) {
-      throw new AppError('ngay_mua khong duoc lon hon ngay hien tai', 400);
+      throw new AppError('ngay_mua kh�ng ��c l�n h�n ng�y hi�n t�i', 400);
     }
   }
 
   if (normalizedNgayMua && normalizedNgayHetBaoHanh && normalizedNgayHetBaoHanh < normalizedNgayMua) {
-    throw new AppError('ngay_het_bao_hanh khong duoc nho hon ngay_mua', 400);
+    throw new AppError('ngay_het_bao_hanh kh�ng ��c nh� h�n ngay_mua', 400);
   }
 };
 
@@ -56,8 +56,8 @@ const normalizeStatusText = (value) => {
   return String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replace(//g, 'd')
+    .replace(//g, 'D')
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
 };
@@ -93,7 +93,7 @@ const isSameNullableId = (firstValue, secondValue) => {
 const ensureDeviceExists = async (thietBiId, options = {}) => {
   const device = await thietBiRepository.findDeviceRecordById(thietBiId, options);
   if (!device) {
-    throw new AppError('Khong tim thay thiet bi', 404);
+    throw new AppError('Kh�ng t�m th�y thi�t b�', 404);
   }
 
   return device;
@@ -102,7 +102,7 @@ const ensureDeviceExists = async (thietBiId, options = {}) => {
 const ensureLoaiThietBiExists = async (loaiThietBiId, options = {}) => {
   const loaiThietBi = await thietBiRepository.findLoaiThietBiById(loaiThietBiId, options);
   if (!loaiThietBi) {
-    throw new AppError('loai_thiet_bi_id khong ton tai', 400);
+    throw new AppError('loai_thiet_bi_id kh�ng t�n t�i', 400);
   }
 
   return loaiThietBi;
@@ -113,7 +113,7 @@ const ensureHangSanXuatExists = async (hangSanXuatId, options = {}) => {
 
   const row = await thietBiRepository.findHangSanXuatById(hangSanXuatId, options);
   if (!row) {
-    throw new AppError('hang_san_xuat_id khong ton tai', 400);
+    throw new AppError('hang_san_xuat_id kh�ng t�n t�i', 400);
   }
 
   return row;
@@ -124,7 +124,7 @@ const ensureNhaCungCapExists = async (nhaCungCapId, options = {}) => {
 
   const row = await thietBiRepository.findNhaCungCapById(nhaCungCapId, options);
   if (!row) {
-    throw new AppError('nha_cung_cap_id khong ton tai', 400);
+    throw new AppError('nha_cung_cap_id kh�ng t�n t�i', 400);
   }
 
   return row;
@@ -135,7 +135,7 @@ const ensureDonViExists = async (donViId, options = {}) => {
 
   const row = await thietBiRepository.findDonViById(donViId, options);
   if (!row) {
-    throw new AppError('don_vi_hien_tai_id khong ton tai', 400);
+    throw new AppError('don_vi_hien_tai_id kh�ng t�n t�i', 400);
   }
 
   return row;
@@ -146,7 +146,7 @@ const ensureNguoiPhuTrachExists = async (nguoiPhuTrachId, options = {}) => {
 
   const row = await thietBiRepository.findNguoiDungById(nguoiPhuTrachId, options);
   if (!row) {
-    throw new AppError('nguoi_phu_trach_id khong ton tai', 400);
+    throw new AppError('nguoi_phu_trach_id kh�ng t�n t�i', 400);
   }
 
   return row;
@@ -156,41 +156,32 @@ const ensureTrangThaiExists = async (trangThaiId, options = {}) => {
   const { requireActive = true } = options;
   const row = await thietBiRepository.findTrangThaiById(trangThaiId, options);
   if (!row) {
-    throw new AppError('trang_thai_thiet_bi_id khong ton tai', 400);
+    throw new AppError('trang_thai_thiet_bi_id kh�ng t�n t�i', 400);
   }
   if (requireActive && Number(row.is_active) !== 1) {
-    throw new AppError('trang_thai_thiet_bi_id dang khong hoat dong', 400);
+    throw new AppError('trang_thai_thiet_bi_id ang kh�ng ho�t �ng', 400);
   }
 
   return row;
-};
-
-const ensureDeviceExistsVn = async (thietBiId, options = {}) => {
-  const device = await thietBiRepository.findDeviceRecordById(thietBiId, options);
-  if (!device) {
-    throw new AppError('Không tìm thấy thiết bị', 404);
-  }
-
-  return device;
 };
 
 const ensureTransferTargetExists = async (payload, options = {}) => {
   if (payload.den_don_vi_id !== undefined && payload.den_don_vi_id !== null) {
     const donVi = await thietBiRepository.findDonViById(payload.den_don_vi_id, options);
     if (!donVi || Number(donVi.is_active) !== 1) {
-      throw new AppError('Đơn vị đích không hợp lệ', 400);
+      throw new AppError('�n v� �ch kh�ng h�p l�', 400);
     }
   }
 
   if (payload.den_nguoi_phu_trach_id !== undefined && payload.den_nguoi_phu_trach_id !== null) {
     const nguoiPhuTrach = await thietBiRepository.findNguoiDungById(payload.den_nguoi_phu_trach_id, options);
     if (!nguoiPhuTrach) {
-      throw new AppError('Người phụ trách đích không hợp lệ', 400);
+      throw new AppError('Ng��i ph� tr�ch �ch kh�ng h�p l�', 400);
     }
 
     const accountStatus = String(nguoiPhuTrach.trang_thai_tai_khoan || '').trim().toUpperCase();
     if (accountStatus !== 'ACTIVE') {
-      throw new AppError('Người phụ trách đích không còn hoạt động', 400);
+      throw new AppError('Ng��i ph� tr�ch �ch kh�ng c�n ho�t �ng', 400);
     }
   }
 };
@@ -211,7 +202,7 @@ const resolveTargetAssignment = (currentDevice, payload, operationType) => {
     && isSameNullableId(nextNguoiPhuTrachId, currentDevice.nguoi_phu_trach_id);
 
   if (isDestinationUnchanged) {
-    throw new AppError('Dữ liệu đích trùng hoàn toàn với dữ liệu hiện tại', 400);
+    throw new AppError('D� li�u �ch tr�ng ho�n to�n v�i d� li�u hi�n t�i', 400);
   }
 
   return {
@@ -221,10 +212,36 @@ const resolveTargetAssignment = (currentDevice, payload, operationType) => {
 };
 
 const getTransferSuccessMessage = (operationType) => {
-  if (operationType === TRANSFER_OPERATION_TYPES.CAP_PHAT) return 'Cấp phát thiết bị thành công';
-  if (operationType === TRANSFER_OPERATION_TYPES.BAN_GIAO) return 'Bàn giao thiết bị thành công';
-  if (operationType === TRANSFER_OPERATION_TYPES.DIEU_CHUYEN) return 'Điều chuyển thiết bị thành công';
-  return 'Thu hồi thiết bị thành công';
+  if (operationType === TRANSFER_OPERATION_TYPES.CAP_PHAT) return 'C�p ph�t thi�t b� th�nh c�ng';
+  if (operationType === TRANSFER_OPERATION_TYPES.BAN_GIAO) return 'B�n giao thi�t b� th�nh c�ng';
+  if (operationType === TRANSFER_OPERATION_TYPES.DIEU_CHUYEN) return 'i�u chuy�n thi�t b� th�nh c�ng';
+  return 'Thu h�i thi�t b� th�nh c�ng';
+};
+
+const getTransferOperationLabel = (operationType) => {
+  if (operationType === TRANSFER_OPERATION_TYPES.CAP_PHAT) return 'c�p ph�t';
+  if (operationType === TRANSFER_OPERATION_TYPES.BAN_GIAO) return 'b�n giao';
+  if (operationType === TRANSFER_OPERATION_TYPES.DIEU_CHUYEN) return 'i�u chuy�n';
+  return 'thu h�i';
+};
+
+const ensureDisposedStatusIsImmutable = (currentStatus, nextStatus) => {
+  if (
+    isDisposedStatus(currentStatus)
+    && Number(currentStatus?.trang_thai_thiet_bi_id) !== Number(nextStatus?.trang_thai_thiet_bi_id)
+  ) {
+    throw new AppError('Thi�t b� � thanh l�, kh�ng ��c chuy�n sang tr�ng th�i kh�c', 400);
+  }
+};
+
+const ensureTransferOperationAllowed = (currentStatus, operationType) => {
+  if (isDisposedStatus(currentStatus)) {
+    throw new AppError('Thi�t b� � thanh l�, kh�ng th� thao t�c', 400);
+  }
+
+  if (isMaintenanceStatus(currentStatus)) {
+    throw new AppError(`Thi�t b� ang b�o tr�, kh�ng th� ${getTransferOperationLabel(operationType)}`, 400);
+  }
 };
 
 const ensureSerialUnique = async (soSerial, options = {}) => {
@@ -232,7 +249,7 @@ const ensureSerialUnique = async (soSerial, options = {}) => {
 
   const exists = await thietBiRepository.existsSerial(soSerial, options);
   if (exists) {
-    throw new AppError('so_serial da ton tai', 409);
+    throw new AppError('so_serial � t�n t�i', 409);
   }
 };
 
@@ -276,13 +293,13 @@ const mapDuplicateDatabaseError = (error) => {
 
   const duplicateField = getDuplicateFieldName(error);
   if (duplicateField === 'so_serial') {
-    return new AppError('so_serial da ton tai', 409);
+    return new AppError('so_serial � t�n t�i', 409);
   }
   if (duplicateField === 'ma_tai_san') {
-    return new AppError('Khong the tao ma_tai_san duy nhat, vui long thu lai', 409);
+    return new AppError('Kh�ng th� t�o ma_tai_san duy nh�t, vui l�ng th� l�i', 409);
   }
 
-  return new AppError('Du lieu bi trung voi ban ghi khac', 409);
+  return new AppError('D� li�u b� tr�ng v�i b�n ghi kh�c', 409);
 };
 
 const createDeviceOnce = async (actor, payload, context = {}) => {
@@ -316,7 +333,7 @@ const createDeviceOnce = async (actor, payload, context = {}) => {
       den_trang_thai_id: payload.trang_thai_thiet_bi_id,
       loai_nguon_phat_sinh: 'TAO_MOI',
       nguon_phat_sinh_id: thietBiId,
-      ly_do: 'Khoi tao thiet bi moi',
+      ly_do: 'Kh�i t�o thi�t b� m�i',
       changed_by: actor.nguoi_dung_id,
     }, { connection });
 
@@ -331,7 +348,7 @@ const createDeviceOnce = async (actor, payload, context = {}) => {
       entity_name: ENTITY_NAME,
       entity_id: thietBiId,
       du_lieu_moi: createdDevice,
-      ghi_chu: `Tao thiet bi ${createdDevice?.ma_tai_san || ''}`.trim(),
+      ghi_chu: `T�o thi�t b� ${createdDevice?.ma_tai_san || ''}`.trim(),
       ip_address: context.ipAddress,
     });
 
@@ -369,7 +386,7 @@ const createDevice = async (actor, payload, context = {}) => {
     }
   }
 
-  throw lastError || new AppError('Khong the tao thiet bi do loi sinh ma tai san', 500);
+  throw lastError || new AppError('Kh�ng th� t�o thi�t b� do l�i sinh m� t�i s�n', 500);
 };
 
 const getDevices = async (query) => {
@@ -392,7 +409,7 @@ const getDevices = async (query) => {
 const getDeviceById = async (thietBiId) => {
   const device = await thietBiRepository.findDeviceById(thietBiId);
   if (!device) {
-    throw new AppError('Khong tim thay thiet bi', 404);
+    throw new AppError('Kh�ng t�m th�y thi�t b�', 404);
   }
 
   return device;
@@ -400,10 +417,10 @@ const getDeviceById = async (thietBiId) => {
 
 const updateDevice = async (actor, thietBiId, payload, context = {}) => {
   if (Object.prototype.hasOwnProperty.call(payload, 'ma_tai_san')) {
-    throw new AppError('Khong duoc cap nhat ma_tai_san', 400);
+    throw new AppError('Kh�ng ��c c�p nh�t ma_tai_san', 400);
   }
   if (Object.prototype.hasOwnProperty.call(payload, 'trang_thai_thiet_bi_id')) {
-    throw new AppError('Khong duoc cap nhat trang_thai_thiet_bi_id o API nay', 400);
+    throw new AppError('Kh�ng ��c c�p nh�t trang_thai_thiet_bi_id � API n�y', 400);
   }
 
   const connection = await thietBiRepository.getConnection();
@@ -454,7 +471,7 @@ const updateDevice = async (actor, thietBiId, payload, context = {}) => {
       entity_id: thietBiId,
       du_lieu_cu: currentDevice,
       du_lieu_moi: updatedDevice,
-      ghi_chu: `Cap nhat thiet bi ${updatedDevice?.ma_tai_san || ''}`.trim(),
+      ghi_chu: `C�p nh�t thi�t b� ${updatedDevice?.ma_tai_san || ''}`.trim(),
       ip_address: context.ipAddress,
     });
 
@@ -491,6 +508,8 @@ const updateDeviceStatus = async (actor, thietBiId, payload, context = {}) => {
       };
     }
 
+    ensureDisposedStatusIsImmutable(oldStatus, newStatus);
+
     await thietBiRepository.updateDeviceStatus(thietBiId, {
       trang_thai_thiet_bi_id: newStatus.trang_thai_thiet_bi_id,
       updated_by: actor.nguoi_dung_id,
@@ -502,7 +521,7 @@ const updateDeviceStatus = async (actor, thietBiId, payload, context = {}) => {
       den_trang_thai_id: newStatus.trang_thai_thiet_bi_id,
       loai_nguon_phat_sinh: 'CAP_NHAT_TRANG_THAI',
       nguon_phat_sinh_id: thietBiId,
-      ly_do: payload.ly_do || 'Cap nhat trang thai thiet bi',
+      ly_do: payload.ly_do || 'C�p nh�t tr�ng th�i thi�t b�',
       changed_by: actor.nguoi_dung_id,
     }, { connection });
 
@@ -526,7 +545,7 @@ const updateDeviceStatus = async (actor, thietBiId, payload, context = {}) => {
         ten_trang_thai: newStatus.ten_trang_thai,
         ly_do: payload.ly_do || null,
       },
-      ghi_chu: payload.ly_do || 'Cap nhat trang thai thiet bi',
+      ghi_chu: payload.ly_do || 'C�p nh�t tr�ng th�i thi�t b�',
       ip_address: context.ipAddress,
     });
 
@@ -548,7 +567,7 @@ const executeTransferOperation = async (actor, payload, operationType, context =
   try {
     await connection.beginTransaction();
 
-    const currentDevice = await ensureDeviceExistsVn(payload.thiet_bi_id, {
+    const currentDevice = await ensureDeviceExists(payload.thiet_bi_id, {
       connection,
       forUpdate: true,
     });
@@ -558,16 +577,7 @@ const executeTransferOperation = async (actor, payload, operationType, context =
       requireActive: false,
     });
 
-    if (isDisposedStatus(currentStatus)) {
-      throw new AppError('Thiết bị đã thanh lý, không thể thao tác', 400);
-    }
-
-    if (
-      operationType === TRANSFER_OPERATION_TYPES.DIEU_CHUYEN
-      && isMaintenanceStatus(currentStatus)
-    ) {
-      throw new AppError('Thiết bị đang bảo trì, không thể điều chuyển', 400);
-    }
+    ensureTransferOperationAllowed(currentStatus, operationType);
 
     await ensureTransferTargetExists(payload, { connection });
 
@@ -718,3 +728,6 @@ module.exports = {
   getTransferHistory,
   getDeviceStatusHistory,
 };
+
+
+
