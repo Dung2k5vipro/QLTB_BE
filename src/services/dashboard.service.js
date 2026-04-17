@@ -120,7 +120,7 @@ const getTongQuanDashboard = async (actor, query, context = {}) => {
       from_date: reportRange.fromDate,
       to_date: reportRange.toDate,
     },
-    ghi_chu: 'Truy cập dashboard t�"ng quan',
+    ghi_chu: 'Truy cập dashboard tổng quan',
     ip_address: context.ipAddress,
   });
 

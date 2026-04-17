@@ -105,7 +105,7 @@ const guiDuyetPhieuThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Gửi duy�!t phiếu thanh lý thành công',
+    message: 'Gửi duyệt phiếu thanh lý thành công',
     data: updated,
   });
 });
@@ -116,7 +116,7 @@ const duyetPhieuThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Duy�!t phiếu thanh lý thành công',
+    message: 'Duyệt phiếu thanh lý thành công',
     data: updated,
   });
 });
@@ -127,7 +127,7 @@ const tuChoiPhieuThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Từ ch�i phiếu thanh lý thành công',
+    message: 'Từ chối phiếu thanh lý thành công',
     data: updated,
   });
 });
@@ -160,7 +160,7 @@ const chuyenTrangThaiPhieuThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'ChuyỒn trạng thái phiếu thanh lý thành công',
+    message: 'Chuyển trạng thái phiếu thanh lý thành công',
     data: updated,
   });
 });
@@ -169,7 +169,7 @@ const getPhieuThanhLyHistory = asyncHandler(async (req, res) => {
   const result = await thanhLyService.getPhieuThanhLyHistory(req.params.id, req.query);
 
   return sendSuccess(res, {
-    message: 'Lấy l�9ch sử phiếu thanh lý thành công',
+    message: 'Lấy lịch sử phiếu thanh lý thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -192,4 +192,3 @@ module.exports = {
   chuyenTrangThaiPhieuThanhLy,
   getPhieuThanhLyHistory,
 };
-

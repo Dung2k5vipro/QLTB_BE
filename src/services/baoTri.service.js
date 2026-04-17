@@ -14,7 +14,7 @@ const normalizeText = (value) => {
   return String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/�/g, 'd')
+    .replace(/đ/g, 'd')
     .replace(/Đ/g, 'D')
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
@@ -143,7 +143,7 @@ const resolveStatusBundle = async (connection) => {
 const ensureThietBiExists = async (thietBiId, options = {}) => {
   const device = await baoTriRepository.findThietBiById(thietBiId, options);
   if (!device) {
-    throw new AppError('Không tìm thấy thiết b�9', 404);
+    throw new AppError('Không tìm thấy thiết bị', 404);
   }
   return device;
 };
@@ -169,10 +169,10 @@ const ensureDonViSuaChuaExists = async (donViSuaChuaId, options = {}) => {
 
   const donViSuaChua = await baoTriRepository.findDonViSuaChuaById(donViSuaChuaId, options);
   if (!donViSuaChua) {
-    throw new AppError('don_vi_sua_chua_id không hợp l�!', 400);
+    throw new AppError('don_vi_sua_chua_id không hợp lệ!', 400);
   }
   if (Number(donViSuaChua.is_active) !== 1) {
-    throw new AppError('Đơn v�9 sửa chữa �ang không hoạt ��"ng', 400);
+    throw new AppError('Đơn vđ9 sửa chữa đang không hoạt đđ"ng', 400);
   }
 
   return donViSuaChua;
@@ -183,10 +183,10 @@ const ensureNguoiDungExists = async (nguoiDungId, options = {}) => {
 
   const user = await baoTriRepository.findNguoiDungById(nguoiDungId, options);
   if (!user) {
-    throw new AppError('thuc_hien_boi_id không hợp l�!', 400);
+    throw new AppError('thuc_hien_boi_id không hợp lđ!', 400);
   }
   if (String(user.trang_thai_tai_khoan || '').toUpperCase() !== 'ACTIVE') {
-    throw new AppError('Người thực hi�!n �ang không hoạt ��"ng', 400);
+    throw new AppError('Người thực hiđ!n đang không hoạt đđ"ng', 400);
   }
   return user;
 };
@@ -200,17 +200,17 @@ const ensureTrangThaiThietBiExists = async (
 ) => {
   const status = await baoTriRepository.findTrangThaiThietBiById(trangThaiThietBiId, { connection });
   if (!status) {
-    throw new AppError('trang_thai_thiet_bi_id kh?ng h?p l?', 400);
+    throw new AppError('trang_thai_thiet_bi_id không hợp lệ', 400);
   }
   if (requireActive && Number(status.is_active) !== 1) {
-    throw new AppError('trang_thai_thiet_bi_id ?ang kh?ng ho?t ??ng', 400);
+    throw new AppError('trang_thai_thiet_bi_id đang không hoạt động', 400);
   }
   return status;
 };
 
 const ensureManualMaintenanceAllowed = (device) => {
   if (isDisposedStatus(device)) {
-    throw new AppError('Thiết b�9 �ã thanh lý, không thỒ tiếp nhận bảo trì thủ công', 400);
+    throw new AppError('Thiết bị đã thanh lý, không thỒ tiếp nhận bảo trì thủ công', 400);
   }
 };
 
@@ -245,7 +245,7 @@ const ensureNgayHoanThanhHopLe = (ngayTiepNhan, ngayHoanThanh) => {
   if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) return;
 
   if (endDate.getTime() < startDate.getTime()) {
-    throw new AppError('ngay_hoan_thanh không �ược nhỏ hơn ngay_tiep_nhan', 400);
+    throw new AppError('ngay_hoan_thanh không được nhỏ hơn ngay_tiep_nhan', 400);
   }
 };
 
@@ -255,13 +255,13 @@ const ensureDuDieuKienHoanTat = (maintenanceLog) => {
   const ngayHoanThanh = maintenanceLog?.ngay_hoan_thanh;
 
   if (!noiDungXuLy) {
-    throw new AppError('Không thỒ hoàn tất khi thiếu n�"i dung xử lý', 400);
+    throw new AppError('Không thể hoàn tất khi thiếu nội dung xử lý', 400);
   }
   if (!ngayHoanThanh) {
     throw new AppError('Không thỒ hoàn tất khi thiếu ngày hoàn thành', 400);
   }
   if (!Number.isFinite(chiPhi) || chiPhi < 0) {
-    throw new AppError('Không thỒ hoàn tất khi chi phí không hợp l�!', 400);
+    throw new AppError('Không thể hoàn tất khi chi phí không hợp lệ', 400);
   }
 };
 
@@ -303,7 +303,7 @@ const determineFinalDeviceStatus = ({
   };
 
   if (isMaintenanceStatus(fallbackCurrentStatus)) {
-    throw new AppError('Không tìm thấy trạng thái thiết b�9 phù hợp �Ồ hoàn tất bảo trì', 500);
+    throw new AppError('Không tìm thấy trạng thái thiết bị phù hợp đỒ hoàn tất bảo trì', 500);
   }
 
   return fallbackCurrentStatus;
@@ -368,7 +368,7 @@ const createNhatKyBaoTri = async (actor, payload, context = {}) => {
       });
 
       if (Number(linkedTicket.thiet_bi_id) !== Number(payload.thiet_bi_id)) {
-        throw new AppError('phieu_bao_hong_id kh?ng thu?c thi?t b? ?? ch?n', 400);
+        throw new AppError('phieu_bao_hong_id không thuộc thiết bị đã chọn', 400);
       }
     }
 
@@ -404,7 +404,7 @@ const createNhatKyBaoTri = async (actor, payload, context = {}) => {
 
       const statusBundle = await resolveStatusBundle(connection);
       if (!statusBundle.maintenanceStatus) {
-        throw new AppError('Kh?ng t?m th?y tr?ng th?i thi?t b? ?ang b?o tr?', 500);
+        throw new AppError('Không tìm thấy trạng thái thiết bị đang bảo trì', 500);
       }
 
       await updateDeviceStatusIfNeeded({
@@ -414,7 +414,7 @@ const createNhatKyBaoTri = async (actor, payload, context = {}) => {
         targetStatus: statusBundle.maintenanceStatus,
         sourceType: 'BAO_TRI_THU_CONG_TIEP_NHAN',
         sourceId: createdId,
-        reason: 'Ti?p nh?n b?o tr? th? c?ng #' + createdId,
+        reason: 'Tiếp nhận bảo trì thủ công #' + createdId,
       });
     }
 
@@ -427,7 +427,7 @@ const createNhatKyBaoTri = async (actor, payload, context = {}) => {
       entityId: createdId,
       oldData: null,
       newData: created,
-      note: 'T?o nh?t k? b?o tr? #' + createdId,
+      note: 'Tạo nhật ký bảo trì #' + createdId,
       ipAddress: context.ipAddress,
     });
 
@@ -509,7 +509,7 @@ const updateNhatKyBaoTri = async (actor, nhatKyBaoTriId, payload, context = {}) 
     if (thucHienBoiId !== undefined) updatePayload.thuc_hien_boi_id = thucHienBoiId;
 
     if (!Object.keys(updatePayload).length) {
-      throw new AppError('Không có dữ li�!u hợp l�! �Ồ cập nhật', 400);
+      throw new AppError('Không có dữ liđ!u hợp lđ! đỒ cập nhật', 400);
     }
 
     await baoTriRepository.updateNhatKyBaoTriById(nhatKyBaoTriId, updatePayload, { connection });
@@ -669,7 +669,7 @@ const completeNhatKyBaoTri = async (actor, nhatKyBaoTriId, payload, context = {}
           ma_trang_thai: finalDeviceStatus.ma_trang_thai,
           ten_trang_thai: finalDeviceStatus.ten_trang_thai,
         },
-        note: `Đ�ng b�" trạng thái thiết b�9 khi hoàn tất bảo trì #${nhatKyBaoTriId}`,
+        note: `Đđng bđ" trạng thái thiết bị khi hoàn tất bảo trì #${nhatKyBaoTriId}`,
         ipAddress: context.ipAddress,
       });
     }
@@ -749,7 +749,7 @@ const getDanhSachBaoTriTheoPhieuBaoHong = async (phieuBaoHongId, query = {}) => 
 
 const tiepNhanBaoTriThuCong = async (actor, payload, context = {}) => {
   if (hasOwn(payload, 'phieu_bao_hong_id') && payload.phieu_bao_hong_id) {
-    throw new AppError('API này ch�0 dùng cho tiếp nhận bảo trì thủ công, không gắn v�:i phiếu báo hỏng', 400);
+    throw new AppError('API này chđ0 dùng cho tiếp nhận bảo trì thủ công, không gắn vđ:i phiếu báo hỏng', 400);
   }
 
   return createNhatKyBaoTri(actor, payload, context);

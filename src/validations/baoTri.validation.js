@@ -9,7 +9,7 @@ const LOAI_XU_LY_VALUES = [
 
 const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
-const requireObject = (value, message = 'D� li�u g�i l�n kh�ng h�p l�') => {
+const requireObject = (value, message = 'Dđ liđu gửi lđn khđng hđp lđ') => {
   if (!isObject(value)) {
     throw new AppError(message, 400);
   }
@@ -18,26 +18,26 @@ const requireObject = (value, message = 'D� li�u g�i l�n kh�ng h�p l
 const assertOnlyAllowedKeys = (payload, allowedFields) => {
   const invalidFields = Object.keys(payload).filter((key) => !allowedFields.includes(key));
   if (invalidFields.length) {
-    throw new AppError(`Kh�ng h� tr� tr��ng: ${invalidFields.join(', ')}`, 400);
+    throw new AppError(`Không hỗ trợ trường: ${invalidFields.join(', ')}`, 400);
   }
 };
 
 const toPositiveInt = (value, fieldName, { required = false, allowNull = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
 
   if (value === null) {
     if (allowNull) return null;
-    throw new AppError(`${fieldName} ph�i l� s� nguy�n d��ng`, 400);
+    throw new AppError(`${fieldName} phải là số nguyên dương`, 400);
   }
 
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new AppError(`${fieldName} ph�i l� s� nguy�n d��ng`, 400);
+    throw new AppError(`${fieldName} phải là số nguyên dương`, 400);
   }
 
   return parsed;
@@ -46,18 +46,18 @@ const toPositiveInt = (value, fieldName, { required = false, allowNull = false }
 const toNonNegativeNumber = (value, fieldName, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
 
   if (value === null) {
-    throw new AppError(`${fieldName} ph�i l� s� kh�ng �m`, 400);
+    throw new AppError(`${fieldName} phải là số không âm`, 400);
   }
 
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 0) {
-    throw new AppError(`${fieldName} ph�i l� s� kh�ng �m`, 400);
+    throw new AppError(`${fieldName} phải là số không âm`, 400);
   }
 
   return parsed;
@@ -67,13 +67,13 @@ const toNullableString = (value, fieldName, maxLength = 5000) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} ph�i l� chu�i`, 400);
+    throw new AppError(`${fieldName} phải là chuỗi`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} v��t qu� � d�i t�i a ${maxLength}`, 400);
+    throw new AppError(`${fieldName} vđđt quđ đ dđi tđi a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -82,21 +82,21 @@ const toNullableString = (value, fieldName, maxLength = 5000) => {
 const toDateTime = (value, fieldName, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
   if (value === null) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   if (typeof value !== 'string' && !(value instanceof Date)) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return date;
@@ -106,14 +106,14 @@ const toDateOnly = (value, fieldName) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} ph�i theo �nh d�ng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phđi theo đnh dđng YYYY-MM-DD`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    throw new AppError(`${fieldName} ph�i theo �nh d�ng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phđi theo đnh dđng YYYY-MM-DD`, 400);
   }
 
   const [year, month, day] = normalized.split('-').map(Number);
@@ -123,7 +123,7 @@ const toDateOnly = (value, fieldName) => {
     || date.getUTCMonth() + 1 !== month
     || date.getUTCDate() !== day
   ) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return normalized;
@@ -132,17 +132,17 @@ const toDateOnly = (value, fieldName) => {
 const toUpperEnum = (value, fieldName, allowedValues, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
   if (value === null || typeof value !== 'string') {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   const normalized = value.trim().toUpperCase();
   if (!normalized || !allowedValues.includes(normalized)) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return normalized;
@@ -152,13 +152,13 @@ const toKeyword = (value) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError('keyword ph�i l� chu�i', 400);
+    throw new AppError('keyword phải là chuỗi', 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
   if (normalized.length > 255) {
-    throw new AppError('keyword v��t qu� � d�i t�i a 255', 400);
+    throw new AppError('keyword vđđt quđ đ dđi tđi a 255', 400);
   }
 
   return normalized;
@@ -170,7 +170,7 @@ const toFlexibleJsonValue = (value, fieldName, { maxItems = 200 } = {}) => {
 
   if (Array.isArray(value)) {
     if (value.length > maxItems) {
-      throw new AppError(`${fieldName} v��t qu� s� l��ng ph�n t� t�i a ${maxItems}`, 400);
+      throw new AppError(`${fieldName} vđđt quđ sđ lđđng phđn tđ tđi a ${maxItems}`, 400);
     }
     return value;
   }
@@ -185,19 +185,19 @@ const toFlexibleJsonValue = (value, fieldName, { maxItems = 200 } = {}) => {
       try {
         const parsed = JSON.parse(normalized);
         if (Array.isArray(parsed) && parsed.length > maxItems) {
-          throw new AppError(`${fieldName} v��t qu� s� l��ng ph�n t� t�i a ${maxItems}`, 400);
+          throw new AppError(`${fieldName} vđđt quđ sđ lđđng phđn tđ tđi a ${maxItems}`, 400);
         }
         return parsed;
       } catch (error) {
         if (error instanceof AppError) throw error;
-        throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+        throw new AppError(`${fieldName} khđng hđp lđ`, 400);
       }
     }
 
     return [normalized];
   }
 
-  throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+  throw new AppError(`${fieldName} khđng hđp lđ`, 400);
 };
 
 const normalizePagination = (query) => {
@@ -205,7 +205,7 @@ const normalizePagination = (query) => {
   const limit = query.limit === undefined ? 20 : toPositiveInt(query.limit, 'limit');
 
   if (limit > 100) {
-    throw new AppError('limit t�i a l� 100', 400);
+    throw new AppError('limit tđi a lđ 100', 400);
   }
 
   return { page, limit };
@@ -213,13 +213,13 @@ const normalizePagination = (query) => {
 
 const ensureDateRange = (tuNgay, denNgay) => {
   if (tuNgay && denNgay && denNgay < tuNgay) {
-    throw new AppError('den_ngay kh�ng ��c nh� h�n tu_ngay', 400);
+    throw new AppError('den_ngay khđng đđc nhđ hđn tu_ngay', 400);
   }
 };
 
 const nhatKyBaoTriIdParam = {
   params: (params) => {
-    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    requireObject(params, 'Dđ liđu params khđng hđp lđ');
     return {
       id: toPositiveInt(params.id, 'id', { required: true }),
     };
@@ -228,7 +228,7 @@ const nhatKyBaoTriIdParam = {
 
 const thietBiIdParam = {
   params: (params) => {
-    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    requireObject(params, 'Dđ liđu params khđng hđp lđ');
     return {
       thietBiId: toPositiveInt(params.thietBiId, 'thietBiId', { required: true }),
     };
@@ -237,7 +237,7 @@ const thietBiIdParam = {
 
 const phieuBaoHongIdParam = {
   params: (params) => {
-    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    requireObject(params, 'Dđ liđu params khđng hđp lđ');
     return {
       phieuBaoHongId: toPositiveInt(params.phieuBaoHongId, 'phieuBaoHongId', { required: true }),
     };
@@ -273,7 +273,7 @@ const parseCreatePayload = (body, { allowPhieuBaoHongId }) => {
   };
 
   if (!allowPhieuBaoHongId && payload.phieu_bao_hong_id) {
-    throw new AppError('API ti�p nh�n th� c�ng kh�ng nh�n phieu_bao_hong_id', 400);
+    throw new AppError('API tiđp nhđn thđ cđng khđng nhđn phieu_bao_hong_id', 400);
   }
 
   return payload;
@@ -289,7 +289,7 @@ const tiepNhanBaoTriThuCong = {
 
 const getNhatKyBaoTriListQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, [
       'keyword',
       'thiet_bi_id',
@@ -324,7 +324,7 @@ const getNhatKyBaoTriListQuery = {
 
 const getLichSuTheoThietBiQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, [
       'keyword',
       'loai_xu_ly',
@@ -355,7 +355,7 @@ const getLichSuTheoThietBiQuery = {
 
 const getDanhSachTheoPhieuBaoHongQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, [
       'keyword',
       'loai_xu_ly',
@@ -409,7 +409,7 @@ const updateNhatKyBaoTri = {
 
     const hasAnyField = Object.values(payload).some((value) => value !== undefined);
     if (!hasAnyField) {
-      throw new AppError('D� li�u c�p nh�t kh�ng ��c r�ng ho�n to�n', 400);
+      throw new AppError('Dđ liđu cập nhật khđng đđc rđng hođn tođn', 400);
     }
 
     return payload;

@@ -176,7 +176,7 @@ const createMasterDataRepository = ({
 
   const updateStatus = async (id, isActive, { connection } = {}) => {
     if (!hasIsActive) {
-      throw new Error(`B?ng ${tableName} kh?ng h? tr? tr??ng is_active`);
+      throw new Error(`B?ng ${tableName} không h? tr? tr??ng is_active`);
     }
 
     const executor = resolveExecutor(connection);

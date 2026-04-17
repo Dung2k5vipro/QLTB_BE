@@ -16,7 +16,7 @@ const createMasterDataService = ({
   const ensureExists = async (id) => {
     const row = await repository.findById(id);
     if (!row) {
-      throw new AppError('Kh?ng t?m th?y d? li?u', 404);
+      throw new AppError('Không tìm thấy dữ liệu', 404);
     }
 
     return row;
@@ -31,7 +31,7 @@ const createMasterDataService = ({
 
       const exists = await repository.existsByField(field, value, excludeId);
       if (exists) {
-        throw new AppError(`${field} ?? t?n t?i`, 409);
+        throw new AppError(`${field} đã tồn tại`, 409);
       }
     }
   };
@@ -43,10 +43,10 @@ const createMasterDataService = ({
     const duplicatedField = uniqueFields.find((field) => message.includes(field));
 
     if (duplicatedField) {
-      return new AppError(`${duplicatedField} ?? t?n t?i`, 409);
+      return new AppError(`${duplicatedField} đã tồn tại`, 409);
     }
 
-    return new AppError('D? li?u bi trung voi ban ghi khac', 409);
+    return new AppError('Dữ liệu bị trùng với bản ghi khác', 409);
   };
 
   const getList = async (query) => {
@@ -84,7 +84,7 @@ const createMasterDataService = ({
         entity_name: entityName,
         entity_id: insertedId,
         du_lieu_moi: createdItem,
-        ghi_chu: `T?o moi ${entityName}${createdItem?.[displayField] ? `: ${createdItem[displayField]}` : ''}`,
+        ghi_chu: `Tạo moi ${entityName}${createdItem?.[displayField] ? `: ${createdItem[displayField]}` : ''}`,
         ip_address: context.ipAddress,
       });
 
@@ -114,7 +114,7 @@ const createMasterDataService = ({
       entity_id: id,
       du_lieu_cu: currentItem,
       du_lieu_moi: updatedItem,
-      ghi_chu: `C?p nh?t ${entityName}${updatedItem?.[displayField] ? `: ${updatedItem[displayField]}` : ''}`,
+      ghi_chu: `Cập nhật ${entityName}${updatedItem?.[displayField] ? `: ${updatedItem[displayField]}` : ''}`,
       ip_address: context.ipAddress,
     });
 
@@ -147,7 +147,7 @@ const createMasterDataService = ({
       du_lieu_moi: {
         is_active: updatedItem.is_active,
       },
-      ghi_chu: `Chuyen tr?ng th?i ${entityName} sang ${nextStatus ? 'active' : 'inactive'}`,
+      ghi_chu: `Chuyen trạng thái ${entityName} sang ${nextStatus ? 'active' : 'inactive'}`,
       ip_address: context.ipAddress,
     });
 

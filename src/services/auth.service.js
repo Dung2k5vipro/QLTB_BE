@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+﻿const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const AppError = require('../utils/appError');
@@ -55,11 +55,11 @@ const login = async (credentials, context = {}) => {
       du_lieu_moi: {
         ten_dang_nhap: credentials.ten_dang_nhap,
       },
-      ghi_chu: 'Sai t?n ??ng nh?p ho?c m?t kh?u',
+      ghi_chu: 'Sai tên đăng nhập hoặc mật khẩu',
       ip_address: context.ipAddress,
     });
 
-    throw new AppError('Ten dang nhap ho?c m?t kh?u khong dung', 401);
+    throw new AppError('Tên đăng nhập hoặc mật khẩu không đúng', 401);
   }
 
   const matched = await bcrypt.compare(credentials.mat_khau, user.mat_khau_hash || '');
@@ -70,11 +70,11 @@ const login = async (credentials, context = {}) => {
       hanh_dong: 'LOGIN_FAILED',
       entity_name: 'nguoi_dung',
       entity_id: user.nguoi_dung_id,
-      ghi_chu: 'Sai t?n ??ng nh?p ho?c m?t kh?u',
+      ghi_chu: 'Sai tên đăng nhập hoặc mật khẩu',
       ip_address: context.ipAddress,
     });
 
-    throw new AppError('Ten dang nhap ho?c m?t kh?u khong dung', 401);
+    throw new AppError('Tên đăng nhập hoặc mật khẩu không đúng', 401);
   }
 
   const accountStatus = normalizeStatus(user.trang_thai_tai_khoan);
@@ -85,11 +85,11 @@ const login = async (credentials, context = {}) => {
       hanh_dong: 'LOGIN_FAILED',
       entity_name: 'nguoi_dung',
       entity_id: user.nguoi_dung_id,
-      ghi_chu: `T?i kho?n o tr?ng th?i ${accountStatus}`,
+      ghi_chu: `Tài khoản ở trạng thái ${accountStatus}`,
       ip_address: context.ipAddress,
     });
 
-    throw new AppError('T?i kho?n ?ang b? kh?a ho?c ng?ng ho?t ??ng', 403);
+    throw new AppError('Tài khoản đang bị khóa hoặc ngừng hoạt động', 403);
   }
 
   const token = jwt.sign(buildTokenPayload(user), jwtConfig.secret, {
@@ -103,7 +103,7 @@ const login = async (credentials, context = {}) => {
     hanh_dong: 'LOGIN_SUCCESS',
     entity_name: 'nguoi_dung',
     entity_id: user.nguoi_dung_id,
-    ghi_chu: '??ng nh?p th?nh c?ng',
+    ghi_chu: 'Đăng nhập thành công',
     ip_address: context.ipAddress,
   });
 
@@ -119,7 +119,7 @@ const getCurrentUser = async (nguoiDungId) => {
   const user = await userRepository.findById(nguoiDungId);
 
   if (!user) {
-    throw new AppError('Kh?ng t?m th?y ng??i d?ng', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   return toPublicUser(user);
@@ -132,19 +132,19 @@ const logout = async (reqUser, context = {}) => {
     hanh_dong: 'LOGOUT',
     entity_name: 'nguoi_dung',
     entity_id: reqUser.nguoi_dung_id,
-    ghi_chu: '??ng xu?t',
+    ghi_chu: 'Đăng xuất',
     ip_address: context.ipAddress,
   });
 
   return {
-    message: '??ng xu?t th?nh c?ng',
+    message: 'Đăng xuất thành công',
   };
 };
 
 const changePassword = async (nguoiDungId, payload, context = {}) => {
   const user = await userRepository.findAuthById(nguoiDungId);
   if (!user) {
-    throw new AppError('Kh?ng t?m th?y ng??i d?ng', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   const matchedCurrentPassword = await bcrypt.compare(payload.mat_khau_hien_tai, user.mat_khau_hash || '');
@@ -154,7 +154,7 @@ const changePassword = async (nguoiDungId, payload, context = {}) => {
 
   const matchedOldPassword = await bcrypt.compare(payload.mat_khau_moi, user.mat_khau_hash || '');
   if (matchedOldPassword) {
-    throw new AppError('mat_khau_moi kh?ng ???c tr?ng v?i mat_khau_hien_tai', 400);
+    throw new AppError('mat_khau_moi không được trùng với mat_khau_hien_tai', 400);
   }
 
   const newPasswordHash = await bcrypt.hash(payload.mat_khau_moi, SALT_ROUNDS);
@@ -166,12 +166,12 @@ const changePassword = async (nguoiDungId, payload, context = {}) => {
     hanh_dong: 'CHANGE_PASSWORD',
     entity_name: 'nguoi_dung',
     entity_id: nguoiDungId,
-    ghi_chu: 'Ng??i d?ng doi m?t kh?u',
+    ghi_chu: 'Người dùng đổi mật khẩu',
     ip_address: context.ipAddress,
   });
 
   return {
-    message: '??i m?t kh?u th?nh c?ng',
+    message: 'Đổi mật khẩu thành công',
   };
 };
 
@@ -179,39 +179,39 @@ const bootstrapAdmin = async (payload, context = {}) => {
   const bootstrapKey = process.env.BOOTSTRAP_ADMIN_KEY;
 
   if (!bootstrapKey) {
-    throw new AppError('Bootstrap admin ?ang t?t. C?n c?u h?nh BOOTSTRAP_ADMIN_KEY trong .env', 403);
+    throw new AppError('Bootstrap admin đang tắt. Cần cấu hình BOOTSTRAP_ADMIN_KEY trong .env', 403);
   }
 
   if (payload.bootstrap_key !== bootstrapKey) {
-    throw new AppError('bootstrap_key kh?ng h?p l?', 403);
+    throw new AppError('bootstrap_key không hợp lệ', 403);
   }
 
   const adminRole = await roleRepository.findAdminRole();
   if (!adminRole) {
-    throw new AppError('Kh?ng t?m th?y role ADMIN trong b?ng vai_tro', 400);
+    throw new AppError('Không tìm thấy role ADMIN trong bảng vai_tro', 400);
   }
 
   const totalAdminUsers = await userRepository.countUsersByRoleId(adminRole.vai_tro_id);
   if (totalAdminUsers > 0) {
-    throw new AppError('He thong da co t?i kho?n admin, kh?ng th? bootstrap lai', 409);
+    throw new AppError('Hệ thống đã có tài khoản admin, không thể bootstrap lại', 409);
   }
 
   if (await userRepository.existsByUsername(payload.ten_dang_nhap)) {
-    throw new AppError('ten_dang_nhap ?? t?n t?i', 409);
+    throw new AppError('ten_dang_nhap đã tồn tại', 409);
   }
 
   if (payload.email && await userRepository.existsByEmail(payload.email)) {
-    throw new AppError('email ?? t?n t?i', 409);
+    throw new AppError('email đã tồn tại', 409);
   }
 
   if (payload.so_dien_thoai && await userRepository.existsByPhone(payload.so_dien_thoai)) {
-    throw new AppError('so_dien_thoai ?? t?n t?i', 409);
+    throw new AppError('so_dien_thoai đã tồn tại', 409);
   }
 
   if (payload.don_vi_id !== null && payload.don_vi_id !== undefined) {
     const donVi = await donViRepository.findById(payload.don_vi_id);
     if (!donVi) {
-      throw new AppError('don_vi_id kh?ng t?n t?i', 400);
+      throw new AppError('don_vi_id không tồn tại', 400);
     }
   }
 
@@ -226,12 +226,12 @@ const bootstrapAdmin = async (payload, context = {}) => {
     email: payload.email ?? null,
     so_dien_thoai: payload.so_dien_thoai ?? null,
     trang_thai_tai_khoan: ACTIVE_STATUS,
-    ghi_chu: payload.ghi_chu ?? 'Kh?i t?o admin t? h? th?ng',
+    ghi_chu: payload.ghi_chu ?? 'Khởi tạo admin từ hệ thống',
   });
 
   const user = await userRepository.findAuthById(createdUserId);
   if (!user) {
-    throw new AppError('Kh?ng th? tao t?i kho?n admin', 500);
+    throw new AppError('Không thể tạo tài khoản admin', 500);
   }
 
   const token = jwt.sign(buildTokenPayload(user), jwtConfig.secret, {
@@ -250,7 +250,7 @@ const bootstrapAdmin = async (payload, context = {}) => {
       ten_dang_nhap: user.ten_dang_nhap,
       vai_tro_id: user.vai_tro_id,
     },
-    ghi_chu: 'T?o t?i kho?n admin ??u ti?n thong qua bootstrap API',
+    ghi_chu: 'Tạo tài khoản admin đầu tiên thông qua bootstrap API',
     ip_address: context.ipAddress,
   });
 
@@ -269,5 +269,6 @@ module.exports = {
   changePassword,
   bootstrapAdmin,
 };
+
 
 

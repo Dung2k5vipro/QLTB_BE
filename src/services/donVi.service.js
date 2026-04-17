@@ -5,7 +5,7 @@ const { writeAuditLog } = require('./auditLog.service');
 const ensureDonViExists = async (donViId) => {
   const donVi = await donViRepository.findById(donViId);
   if (!donVi) {
-    throw new AppError('Kh?ng t?m th?y ??n v?', 404);
+    throw new AppError('Không tìm thấy đơn vị', 404);
   }
 
   return donVi;
@@ -16,7 +16,7 @@ const ensureMaDonViUnique = async (maDonVi, excludeDonViId = null) => {
 
   const exists = await donViRepository.existsByMaDonVi(maDonVi, excludeDonViId);
   if (exists) {
-    throw new AppError('ma_don_vi ?? t?n t?i', 409);
+    throw new AppError('ma_don_vi đã tồn tại', 409);
   }
 };
 
@@ -27,12 +27,12 @@ const ensureParentValid = async ({ parentId, currentId = null }) => {
   const numericParentId = Number(parentId);
 
   if (currentId && numericParentId === Number(currentId)) {
-    throw new AppError('parent_id kh?ng ???c tr?ng v?i chinh don_vi_id', 400);
+    throw new AppError('parent_id không được trùng với chính don_vi_id', 400);
   }
 
   const parent = await ensureDonViExists(numericParentId);
   if (!parent) {
-    throw new AppError('parent_id kh?ng t?n t?i', 400);
+    throw new AppError('parent_id không tồn tại', 400);
   }
 
   if (!currentId) return;
@@ -45,7 +45,7 @@ const ensureParentValid = async ({ parentId, currentId = null }) => {
     visited.add(cursor);
 
     if (cursor === Number(currentId)) {
-      throw new AppError('Kh?ng th? tao v?ng l?p cha-con cho don_vi', 400);
+      throw new AppError('Không thể tạo vòng lặp cha-con cho don_vi', 400);
     }
 
     const currentNode = await ensureDonViExists(cursor);
@@ -92,7 +92,7 @@ const createDonVi = async (actor, payload, context = {}) => {
     entity_name: 'don_vi',
     entity_id: insertedId,
     du_lieu_moi: createdDonVi,
-    ghi_chu: `T?o ??n v? ${createdDonVi.ten_don_vi}`,
+    ghi_chu: `Tạo đơn vị ${createdDonVi.ten_don_vi}`,
     ip_address: context.ipAddress,
   });
 
@@ -124,7 +124,7 @@ const updateDonVi = async (actor, donViId, payload, context = {}) => {
     entity_id: donViId,
     du_lieu_cu: currentDonVi,
     du_lieu_moi: updatedDonVi,
-    ghi_chu: `C?p nh?t ??n v? ${updatedDonVi.ten_don_vi}`,
+    ghi_chu: `Cập nhật đơn vị ${updatedDonVi.ten_don_vi}`,
     ip_address: context.ipAddress,
   });
 
@@ -156,7 +156,7 @@ const updateDonViStatus = async (actor, donViId, payload, context = {}) => {
     du_lieu_moi: {
       is_active: updatedDonVi.is_active,
     },
-    ghi_chu: `Chuyen tr?ng th?i ??n v? ${updatedDonVi.ten_don_vi} sang ${Number(updatedDonVi.is_active) === 1 ? 'active' : 'inactive'}`,
+    ghi_chu: `Chuyen trạng thái đơn vị ${updatedDonVi.ten_don_vi} sang ${Number(updatedDonVi.is_active) === 1 ? 'active' : 'inactive'}`,
     ip_address: context.ipAddress,
   });
 

@@ -1,15 +1,15 @@
-const { createMasterDataController } = require('./masterData.controllerFactory');
+﻿const { createMasterDataController } = require('./masterData.controllerFactory');
 const mucDoUuTienService = require('../services/mucDoUuTien.service');
 
 const controller = createMasterDataController({
   service: mucDoUuTienService,
   messages: {
-    list: 'L?y danh s?ch m?c ?? ?u ti?n th?nh c?ng',
-    detail: 'L?y chi ti?t m?c ?? ?u ti?n th?nh c?ng',
-    create: 'T?o m?c ?? ?u ti?n th?nh c?ng',
-    update: 'C?p nh?t m?c ?? ?u ti?n th?nh c?ng',
-    updateStatus: 'C?p nh?t tr?ng th?i m?c ?? ?u ti?n th?nh c?ng',
-    statusUnchanged: 'Tr?ng th?i m?c ?? ?u ti?n kh?ng thay ??i',
+    list: 'Lấy danh sách mức độ ưu tiên thành công',
+    detail: 'Lấy chi tiết mức độ ưu tiên thành công',
+    create: 'Tạo mức độ ưu tiên thành công',
+    update: 'Cập nhật mức độ ưu tiên thành công',
+    updateStatus: 'Cập nhật trạng thái mức độ ưu tiên thành công',
+    statusUnchanged: 'Trạng thái mức độ ưu tiên không thay đổi',
   },
 });
 
@@ -20,5 +20,6 @@ module.exports = {
   updateMucDoUuTien: controller.update,
   updateMucDoUuTienStatus: controller.updateStatus,
 };
+
 
 

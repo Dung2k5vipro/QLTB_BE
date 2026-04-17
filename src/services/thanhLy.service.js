@@ -37,7 +37,7 @@ const normalizeText = (value) => {
   return String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/�/g, 'd')
+    .replace(/đ/g, 'd')
     .replace(/Đ/g, 'D')
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '');
@@ -82,13 +82,13 @@ const mapDuplicateDatabaseError = (error) => {
   if (!isMysqlDuplicateKeyError(error)) return error;
 
   if (isMaPhieuDuplicateError(error)) {
-    return new AppError('Mã phiếu thanh lý b�9 trùng, vui lòng thử lại', 409);
+    return new AppError('Mã phiếu thanh lý bị trùng, vui lòng thử lại', 409);
   }
   if (isChiTietDuplicateError(error)) {
-    return new AppError('Thiết b�9 �ã t�n tại trong cùng phiếu thanh lý', 409);
+    return new AppError('Thiết bị đã tđn tại trong cùng phiếu thanh lý', 409);
   }
 
-  return new AppError('Dữ li�!u b�9 trùng v�:i bản ghi khác', 409);
+  return new AppError('Dữ liệu bị trùng với bản ghi khác', 409);
 };
 
 const generateMaPhieuThanhLy = () => {
@@ -146,10 +146,10 @@ const ensurePhieuExists = async (phieuThanhLyId, options = {}) => {
 const ensureLyDoThanhLyExists = async (lyDoThanhLyId, options = {}) => {
   const lyDo = await thanhLyRepository.findLyDoThanhLyById(lyDoThanhLyId, options);
   if (!lyDo) {
-    throw new AppError('ly_do_thanh_ly_id không hợp l�!', 400);
+    throw new AppError('ly_do_thanh_ly_id không hợp lệ!', 400);
   }
   if (Number(lyDo.is_active) !== 1) {
-    throw new AppError('Lý do thanh lý �ang không hoạt ��"ng', 400);
+    throw new AppError('Lý do thanh lý đang không hoạt đđ"ng', 400);
   }
   return lyDo;
 };
@@ -157,7 +157,7 @@ const ensureLyDoThanhLyExists = async (lyDoThanhLyId, options = {}) => {
 const ensureDeviceExists = async (thietBiId, options = {}) => {
   const device = await thanhLyRepository.findDeviceById(thietBiId, options);
   if (!device) {
-    throw new AppError('Không tìm thấy thiết b�9', 404);
+    throw new AppError('Không tìm thấy thiết bị', 404);
   }
   return device;
 };
@@ -165,7 +165,7 @@ const ensureDeviceExists = async (thietBiId, options = {}) => {
 const ensureApprovePermission = (actor) => {
   const role = normalizeRole(actor);
   if (role === 'ADMIN' || role === 'NGUOI_DUYET') return;
-  throw new AppError('Bạn không có quyền duy�!t phiếu thanh lý', 403);
+  throw new AppError('Bạn không có quyền duyệt phiếu thanh lý', 403);
 };
 
 const ensureCompletePermission = (actor) => {
@@ -180,7 +180,7 @@ const ensureCancelPermission = (actor, phieu) => {
 
   if (role === 'NHAN_VIEN_THIET_BI') {
     if (Number(phieu.nguoi_tao_id) === Number(actor?.nguoi_dung_id)) return;
-    throw new AppError('Bạn ch�0 �ược hủy phiếu do chính bạn tạo', 403);
+    throw new AppError('Bạn chđ0 được hủy phiếu do chính bạn tạo', 403);
   }
 
   throw new AppError('Bạn không có quyền hủy phiếu thanh lý', 403);
@@ -204,27 +204,27 @@ const ensureTransitionAllowed = (currentStatus, targetStatus) => {
 
 const ensurePhieuNotClosed = (phieu) => {
   if (phieu.trang_thai === PHIEU_TRANG_THAI.HOAN_TAT || phieu.trang_thai === PHIEU_TRANG_THAI.HUY) {
-    throw new AppError('Phiếu �ã hoàn tất hoặc �ã hủy, không thỒ thao tác', 400);
+    throw new AppError('Phiếu đã hoàn tất hoặc đã hủy, không thỒ thao tác', 400);
   }
 };
 
 const ensureEditablePhieu = (phieu) => {
   ensurePhieuNotClosed(phieu);
   if (phieu.trang_thai !== PHIEU_TRANG_THAI.NHAP) {
-    throw new AppError('Ch�0 �ược cập nhật phiếu khi trạng thái là NHAP', 400);
+    throw new AppError('Chđ0 được cập nhật phiếu khi trạng thái là NHAP', 400);
   }
 };
 
 const ensureEditableChiTiet = (phieu) => {
   ensurePhieuNotClosed(phieu);
   if (phieu.trang_thai !== PHIEU_TRANG_THAI.NHAP) {
-    throw new AppError('Ch�0 �ược cập nhật chi tiết khi phiếu �x trạng thái NHAP', 400);
+    throw new AppError('Chđ0 được cập nhật chi tiết khi phiếu đx trạng thái NHAP', 400);
   }
 };
 
 const ensureDeviceNotDisposed = (device) => {
   if (isDisposedStatus(device)) {
-    throw new AppError('Thiết b�9 �ã thanh lý, không thỒ thêm vào phiếu thanh lý', 400);
+    throw new AppError('Thiết bị đã thanh lý, không thỒ thêm vào phiếu thanh lý', 400);
   }
 };
 
@@ -234,7 +234,7 @@ const ensureDeviceNotBusy = async (thietBiId, { connection, excludePhieuThanhLyI
     openStatuses: OPEN_BAO_HONG_STATUSES,
   });
   if (openBaoHong) {
-    throw new AppError(`Thiết b�9 �ang có phiếu báo hỏng d�x dang (${openBaoHong.ma_phieu})`, 400);
+    throw new AppError(`Thiết bị đang có phiếu báo hỏng dđx dang (${openBaoHong.ma_phieu})`, 400);
   }
 
   const openKiemKe = await thanhLyRepository.findOpenKiemKeByDeviceId(thietBiId, {
@@ -242,7 +242,7 @@ const ensureDeviceNotBusy = async (thietBiId, { connection, excludePhieuThanhLyI
     openStatuses: OPEN_KIEM_KE_STATUSES,
   });
   if (openKiemKe) {
-    throw new AppError(`Thiết b�9 �ang có phiếu kiỒm kê d�x dang (${openKiemKe.ma_phieu})`, 400);
+    throw new AppError(`Thiết bị đang có phiếu kiểm kê dđx dang (${openKiemKe.ma_phieu})`, 400);
   }
 
   const openThanhLy = await thanhLyRepository.findOpenThanhLyByDeviceId(thietBiId, {
@@ -251,7 +251,7 @@ const ensureDeviceNotBusy = async (thietBiId, { connection, excludePhieuThanhLyI
     openStatuses: OPEN_THANH_LY_STATUSES,
   });
   if (openThanhLy) {
-    throw new AppError(`Thiết b�9 �ang có phiếu thanh lý d�x dang (${openThanhLy.ma_phieu})`, 400);
+    throw new AppError(`Thiết bị đang có phiếu thanh lý dđx dang (${openThanhLy.ma_phieu})`, 400);
   }
 };
 
@@ -260,7 +260,7 @@ const ensureChiTietDevicesNotDuplicate = (items) => {
   for (const item of items) {
     const deviceId = Number(item.thiet_bi_id);
     if (seen.has(deviceId)) {
-      throw new AppError('Không �ược trùng thiết b�9 trong cùng phiếu thanh lý', 400);
+      throw new AppError('Không được trùng thiết bị trong cùng phiếu thanh lý', 400);
     }
     seen.add(deviceId);
   }
@@ -283,7 +283,7 @@ const resolveDisposedStatus = async (connection) => {
 
   const disposed = statuses.find(isDisposedStatus);
   if (!disposed) {
-    throw new AppError('Không tìm thấy trạng thái thiết b�9 "Đã thanh lý"', 500);
+    throw new AppError('Không tìm thấy trạng thái thiết bị "Đã thanh lý"', 500);
   }
 
   return disposed;
@@ -498,7 +498,7 @@ const addChiTietThanhLy = async (actor, phieuThanhLyId, payload, context = {}) =
 
     for (const item of payload.items) {
       if (existingDeviceSet.has(Number(item.thiet_bi_id))) {
-        throw new AppError(`Thiết b�9 ${item.thiet_bi_id} �ã t�n tại trong phiếu thanh lý`, 409);
+        throw new AppError(`Thiết bị ${item.thiet_bi_id} đã tđn tại trong phiếu thanh lý`, 409);
       }
     }
 
@@ -596,7 +596,7 @@ const updateChiTietThanhLy = async (
         && Number(item.thiet_bi_id) === nextThietBiId;
     });
     if (duplicated) {
-      throw new AppError('Thiết b�9 �ã t�n tại trong phiếu thanh lý', 409);
+      throw new AppError('Thiết bị đã tđn tại trong phiếu thanh lý', 409);
     }
 
     if (hasOwn(payload, 'thiet_bi_id')) {
@@ -699,7 +699,7 @@ const guiDuyetPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.NHAP) {
-      throw new AppError('Ch�0 �ược gửi duy�!t khi phiếu �x trạng thái NHAP', 400);
+      throw new AppError('Chđ0 được gửi duyđ!t khi phiếu đx trạng thái NHAP', 400);
     }
 
     const chiTiet = await thanhLyRepository.findAllChiTietThanhLyByPhieuId(phieuThanhLyId, {
@@ -707,7 +707,7 @@ const guiDuyetPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}
       forUpdate: true,
     });
     if (!chiTiet.length) {
-      throw new AppError('Phiếu thanh lý phải có ít nhất 1 thiết b�9 trư�:c khi gửi duy�!t', 400);
+      throw new AppError('Phiếu thanh lý phải có ít nhất 1 thiết bị trưđ:c khi gửi duyđ!t', 400);
     }
 
     await validateChiTietItems(chiTiet, {
@@ -735,7 +735,7 @@ const guiDuyetPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}
       entity_id: phieuThanhLyId,
       du_lieu_cu: currentPhieu,
       du_lieu_moi: updatedPhieu,
-      ghi_chu: `Gửi duy�!t phiếu thanh lý ${updatedPhieu.ma_phieu}`,
+      ghi_chu: `Gửi duyđ!t phiếu thanh lý ${updatedPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -761,7 +761,7 @@ const duyetPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}) =
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.CHO_DUYET) {
-      throw new AppError('Ch�0 �ược duy�!t khi phiếu �x trạng thái CHO_DUYET', 400);
+      throw new AppError('Chđ0 được duyđ!t khi phiếu đx trạng thái CHO_DUYET', 400);
     }
 
     const now = new Date();
@@ -788,7 +788,7 @@ const duyetPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}) =
       entity_id: phieuThanhLyId,
       du_lieu_cu: currentPhieu,
       du_lieu_moi: updatedPhieu,
-      ghi_chu: `Duy�!t phiếu thanh lý ${updatedPhieu.ma_phieu}`,
+      ghi_chu: `Duyđ!t phiếu thanh lý ${updatedPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -814,7 +814,7 @@ const tuChoiPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}) 
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.CHO_DUYET) {
-      throw new AppError('Ch�0 �ược từ ch�i khi phiếu �x trạng thái CHO_DUYET', 400);
+      throw new AppError('Chđ0 được từ chđi khi phiếu đx trạng thái CHO_DUYET', 400);
     }
 
     const now = new Date();
@@ -837,7 +837,7 @@ const tuChoiPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {}) 
       entity_id: phieuThanhLyId,
       du_lieu_cu: currentPhieu,
       du_lieu_moi: updatedPhieu,
-      ghi_chu: `Từ ch�i phiếu thanh lý ${updatedPhieu.ma_phieu}`,
+      ghi_chu: `Từ chđi phiếu thanh lý ${updatedPhieu.ma_phieu}`,
       ip_address: context.ipAddress,
     });
 
@@ -863,7 +863,7 @@ const hoanTatPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {})
     });
 
     if (currentPhieu.trang_thai !== PHIEU_TRANG_THAI.DA_DUYET) {
-      throw new AppError('Ch�0 �ược hoàn tất khi phiếu �x trạng thái DA_DUYET', 400);
+      throw new AppError('Chđ0 được hoàn tất khi phiếu đx trạng thái DA_DUYET', 400);
     }
 
     const chiTiet = await thanhLyRepository.findAllChiTietThanhLyByPhieuId(phieuThanhLyId, {
@@ -871,7 +871,7 @@ const hoanTatPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {})
       forUpdate: true,
     });
     if (!chiTiet.length) {
-      throw new AppError('Phiếu thanh lý chưa có chi tiết thiết b�9', 400);
+      throw new AppError('Phiếu thanh lý chưa có chi tiết thiết bị', 400);
     }
 
     const disposedStatus = await resolveDisposedStatus(connection);
@@ -888,7 +888,7 @@ const hoanTatPhieuThanhLy = async (actor, phieuThanhLyId, payload, context = {})
           thiet_bi_id: device.thiet_bi_id,
           ma_tai_san: device.ma_tai_san,
           da_cap_nhat: false,
-          canh_bao: 'Thiết b�9 �ã �x trạng thái Đã thanh lý',
+          canh_bao: 'Thiết bị đã đx trạng thái Đã thanh lý',
         });
         continue;
       }
@@ -1046,7 +1046,7 @@ const chuyenTrangThaiPhieuThanhLy = async (actor, phieuThanhLyId, payload, conte
     }, context);
   }
 
-  throw new AppError('Không h� trợ chuyỒn về trạng thái này bằng API', 400);
+  throw new AppError('Không hđ trợ chuyỒn về trạng thái này bằng API', 400);
 };
 
 const getPhieuThanhLyHistory = async (phieuThanhLyId, query) => {

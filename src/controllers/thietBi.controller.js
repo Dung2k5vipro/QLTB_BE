@@ -1,4 +1,4 @@
-const asyncHandler = require('../utils/asyncHandler');
+﻿const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/response');
 const { getRequestIp } = require('../utils/request');
 const thietBiService = require('../services/thietBi.service');
@@ -10,7 +10,7 @@ const createDevice = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'T?o thi?t b? th?nh c?ng',
+    message: 'Tạo thiết bị thành công',
     data: createdDevice,
   });
 });
@@ -19,7 +19,7 @@ const getDevices = asyncHandler(async (req, res) => {
   const result = await thietBiService.getDevices(req.query);
 
   return sendSuccess(res, {
-    message: 'L?y danh s?ch thi?t b? th?nh c?ng',
+    message: 'Lấy danh sách thiết bị thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -29,7 +29,7 @@ const getDeviceById = asyncHandler(async (req, res) => {
   const device = await thietBiService.getDeviceById(req.params.id);
 
   return sendSuccess(res, {
-    message: 'L?y chi ti?t thi?t b? th?nh c?ng',
+    message: 'Lấy chi tiết thiết bị thành công',
     data: device,
   });
 });
@@ -40,7 +40,7 @@ const updateDevice = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'C?p nh?t thi?t b? th?nh c?ng',
+    message: 'Cập nhật thiết bị thành công',
     data: device,
   });
 });
@@ -51,7 +51,7 @@ const updateDeviceStatus = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: result.changed ? 'C?p nh?t tr?ng th?i thi?t b? th?nh c?ng' : 'Tr?ng th?i thi?t b? kh?ng thay ??i',
+    message: result.changed ? 'Cập nhật trạng thái thiết bị thành công' : 'Trạng thái thiết bị không thay đổi',
     data: result.device,
   });
 });
@@ -62,7 +62,7 @@ const capPhatThietBi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Cấp phát thiết b�9 thành công',
+    message: 'Cấp phát thiết bị thành công',
     data: result,
   });
 });
@@ -73,7 +73,7 @@ const banGiaoThietBi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Bàn giao thiết b�9 thành công',
+    message: 'Bàn giao thiết bị thành công',
     data: result,
   });
 });
@@ -84,7 +84,7 @@ const dieuChuyenThietBi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Điều chuyỒn thiết b�9 thành công',
+    message: 'Điều chuyển thiết bị thành công',
     data: result,
   });
 });
@@ -95,7 +95,7 @@ const thuHoiThietBi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Thu h�i thiết b�9 thành công',
+    message: 'Thu hồi thiết bị thành công',
     data: result,
   });
 });
@@ -104,7 +104,7 @@ const getTransferHistory = asyncHandler(async (req, res) => {
   const result = await thietBiService.getTransferHistory(req.query);
 
   return sendSuccess(res, {
-    message: 'Lấy l�9ch sử cấp phát, bàn giao, �iều chuyỒn, thu h�i thành công',
+    message: 'Lấy lịch sử cấp phát, bàn giao, điều chuyển, thu hồi thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -114,7 +114,7 @@ const getDeviceStatusHistory = asyncHandler(async (req, res) => {
   const history = await thietBiService.getDeviceStatusHistory(req.params.id);
 
   return sendSuccess(res, {
-    message: 'L?y l?ch s? tr?ng th?i thi?t b? th?nh c?ng',
+    message: 'Lấy lịch sử trạng thái thiết bị thành công',
     data: history,
   });
 });
@@ -132,5 +132,6 @@ module.exports = {
   getTransferHistory,
   getDeviceStatusHistory,
 };
+
 
 

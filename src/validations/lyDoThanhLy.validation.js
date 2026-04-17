@@ -26,7 +26,7 @@ const getLyDoThanhLyQuery = {
 
 const createLyDoThanhLy = {
   body: (body) => {
-    requireObject(body, 'Body kh?ng h?p l?');
+    requireObject(body, 'Body không hợp lệ');
     assertOnlyAllowedKeys(body, ALLOWED_CREATE_FIELDS);
 
     return {
@@ -40,9 +40,9 @@ const createLyDoThanhLy = {
 
 const updateLyDoThanhLy = {
   body: (body) => {
-    requireObject(body, 'Body kh?ng h?p l?');
+    requireObject(body, 'Body không hợp lệ');
     assertOnlyAllowedKeys(body, ALLOWED_UPDATE_FIELDS);
-    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'C?n ?t nh?t 1 tr??ng de cap nhat');
+    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'Cần ít nhất 1 trường để cập nhật');
 
     const payload = {};
 

@@ -1,15 +1,15 @@
-const { createMasterDataController } = require('./masterData.controllerFactory');
+﻿const { createMasterDataController } = require('./masterData.controllerFactory');
 const donViSuaChuaService = require('../services/donViSuaChua.service');
 
 const controller = createMasterDataController({
   service: donViSuaChuaService,
   messages: {
-    list: 'L?y danh s?ch ??n v? s?a ch?a th?nh c?ng',
-    detail: 'L?y chi ti?t ??n v? s?a ch?a th?nh c?ng',
-    create: 'T?o ??n v? s?a ch?a th?nh c?ng',
-    update: 'C?p nh?t ??n v? s?a ch?a th?nh c?ng',
-    updateStatus: 'C?p nh?t tr?ng th?i ??n v? s?a ch?a th?nh c?ng',
-    statusUnchanged: 'Tr?ng th?i ??n v? s?a ch?a kh?ng thay ??i',
+    list: 'Lấy danh sách đơn vị sửa chữa thành công',
+    detail: 'Lấy chi tiết đơn vị sửa chữa thành công',
+    create: 'Tạo đơn vị sửa chữa thành công',
+    update: 'Cập nhật đơn vị sửa chữa thành công',
+    updateStatus: 'Cập nhật trạng thái đơn vị sửa chữa thành công',
+    statusUnchanged: 'Trạng thái đơn vị sửa chữa không thay đổi',
   },
 });
 
@@ -20,5 +20,6 @@ module.exports = {
   updateDonViSuaChua: controller.update,
   updateDonViSuaChuaStatus: controller.updateStatus,
 };
+
 
 

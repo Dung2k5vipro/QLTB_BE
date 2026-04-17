@@ -1,4 +1,4 @@
-const asyncHandler = require('../utils/asyncHandler');
+﻿const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/response');
 const { getRequestIp } = require('../utils/request');
 const baoCaoService = require('../services/baoCao.service');
@@ -9,7 +9,7 @@ const getBaoCaoThietBiTheoLoai = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o t�ng s� thi�t b� theo lo�i th�nh c�ng',
+    message: 'Lấy báo cáo tổng số thiết bị theo loại thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -21,7 +21,7 @@ const getBaoCaoThietBiTheoDonVi = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o t�ng s� thi�t b� theo �n v� th�nh c�ng',
+    message: 'Lấy báo cáo tổng số thiết bị theo đơn vị thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -33,7 +33,7 @@ const getBaoCaoThietBiTheoTrangThai = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o thi�t b� theo tr�ng th�i th�nh c�ng',
+    message: 'Lấy báo cáo thiết bị theo trạng thái thành công',
     data: result.items,
   });
 });
@@ -44,7 +44,7 @@ const getBaoCaoThietBiSapHetBaoHanh = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o thi�t b� s�p h�t b�o h�nh th�nh c�ng',
+    message: 'Lấy báo cáo thiết bị sắp hết bảo hành thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -56,7 +56,7 @@ const getBaoCaoThietBiHongHoacBaoTri = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o thi�t b� h�ng ho�c ang b�o tr� th�nh c�ng',
+    message: 'Lấy báo cáo thiết bị hỏng hoặc đang bảo trì thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -68,7 +68,7 @@ const getBaoCaoChiPhiSuaChuaTheoThang = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o chi ph� s�a ch�a theo th�ng th�nh c�ng',
+    message: 'Lấy báo cáo chi phí sửa chữa theo tháng thành công',
     data: result.items,
   });
 });
@@ -79,7 +79,7 @@ const getBaoCaoChiPhiSuaChuaTheoQuy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o chi ph� s�a ch�a theo qu� th�nh c�ng',
+    message: 'Lấy báo cáo chi phí sửa chữa theo quý thành công',
     data: result.items,
   });
 });
@@ -90,7 +90,7 @@ const getBaoCaoChiPhiSuaChuaTheoNam = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o chi ph� s�a ch�a theo nm th�nh c�ng',
+    message: 'Lấy báo cáo chi phí sửa chữa theo năm thành công',
     data: result.items,
   });
 });
@@ -101,7 +101,7 @@ const getBaoCaoLichSuDieuChuyen = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o l�ch s� i�u chuy�n thi�t b� th�nh c�ng',
+    message: 'Lấy báo cáo lịch sử điều chuyển thiết bị thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -113,7 +113,7 @@ const getBaoCaoKetQuaKiemKeTheoKy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o k�t qu� ki�m k� theo k� th�nh c�ng',
+    message: 'Lấy báo cáo kết quả kiểm kê theo kỳ thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -125,7 +125,7 @@ const getBaoCaoThietBiDeXuatThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o thi�t b� � xu�t thanh l� th�nh c�ng',
+    message: 'Lấy báo cáo thiết bị đề xuất thanh lý thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -137,7 +137,7 @@ const getBaoCaoThietBiDaThanhLy = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'L�y b�o c�o thi�t b� � thanh l� th�nh c�ng',
+    message: 'Lấy báo cáo thiết bị đã thanh lý thành công',
     data: result.items,
     meta: result.pagination,
   });

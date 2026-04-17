@@ -1,4 +1,4 @@
-const asyncHandler = require('../utils/asyncHandler');
+﻿const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/response');
 const { getRequestIp } = require('../utils/request');
 const authService = require('../services/auth.service');
@@ -9,7 +9,7 @@ const login = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: '??ng nh?p th?nh c?ng',
+    message: 'Đăng nhập thành công',
     data: result,
   });
 });
@@ -21,7 +21,7 @@ const bootstrapAdmin = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Kh?i t?o admin th?nh c?ng',
+    message: 'Khởi tạo admin thành công',
     data: result,
   });
 });
@@ -30,7 +30,7 @@ const getMe = asyncHandler(async (req, res) => {
   const user = await authService.getCurrentUser(req.user.nguoi_dung_id);
 
   return sendSuccess(res, {
-    message: 'L?y th?ng tin ng??i d?ng th?nh c?ng',
+    message: 'Lấy thông tin người dùng thành công',
     data: user,
   });
 });
@@ -62,4 +62,5 @@ module.exports = {
   logout,
   changePassword,
 };
+
 

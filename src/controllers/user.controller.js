@@ -1,4 +1,4 @@
-const asyncHandler = require('../utils/asyncHandler');
+﻿const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/response');
 const { getRequestIp } = require('../utils/request');
 const userService = require('../services/user.service');
@@ -7,7 +7,7 @@ const getMyProfile = asyncHandler(async (req, res) => {
   const profile = await userService.getMyProfile(req.user.nguoi_dung_id);
 
   return sendSuccess(res, {
-    message: 'L?y h? s? th?nh c?ng',
+    message: 'Lấy hồ sơ thành công',
     data: profile,
   });
 });
@@ -18,7 +18,7 @@ const updateMyProfile = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'C?p nh?t h? s? th?nh c?ng',
+    message: 'Cập nhật hồ sơ thành công',
     data: profile,
   });
 });
@@ -27,7 +27,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const result = await userService.getUsers(req.query);
 
   return sendSuccess(res, {
-    message: 'L?y danh s?ch t?i kho?n th?nh c?ng',
+    message: 'Lấy danh sách tài khoản thành công',
     data: result.items,
     meta: result.pagination,
   });
@@ -40,7 +40,7 @@ const createUser = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'T?o t?i kho?n th?nh c?ng',
+    message: 'Tạo tài khoản thành công',
     data: createdUser,
   });
 });
@@ -49,7 +49,7 @@ const getUserById = asyncHandler(async (req, res) => {
   const user = await userService.getUserById(req.params.id);
 
   return sendSuccess(res, {
-    message: 'L?y chi ti?t t?i kho?n th?nh c?ng',
+    message: 'Lấy chi tiết tài khoản thành công',
     data: user,
   });
 });
@@ -60,7 +60,7 @@ const updateUser = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'C?p nh?t t?i kho?n th?nh c?ng',
+    message: 'Cập nhật tài khoản thành công',
     data: user,
   });
 });
@@ -71,7 +71,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'C?p nh?t tr?ng th?i t?i kho?n th?nh c?ng',
+    message: 'Cập nhật trạng thái tài khoản thành công',
     data: user,
   });
 });
@@ -96,5 +96,6 @@ module.exports = {
   updateUserStatus,
   resetUserPassword,
 };
+
 
 

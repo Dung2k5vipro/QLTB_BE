@@ -73,7 +73,7 @@ const tuChoiPhieuBaoHong = asyncHandler(async (req, res) => {
   });
 
   return sendSuccess(res, {
-    message: 'Từ ch�i phiếu báo hỏng thành công',
+    message: 'Từ chđi phiếu báo hỏng thành công',
     data: updated,
   });
 });

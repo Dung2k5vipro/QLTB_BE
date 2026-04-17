@@ -11,7 +11,7 @@ const isProtectedRole = (role) => {
 const ensureRoleExists = async (vaiTroId) => {
   const role = await roleRepository.findById(vaiTroId);
   if (!role) {
-    throw new AppError('Kh�ng t�m th�y vai tr�', 404);
+    throw new AppError('Không tìm thấy vai trò', 404);
   }
 
   return role;
@@ -22,7 +22,7 @@ const ensureCodeUnique = async (maVaiTro, excludeVaiTroId = null) => {
 
   const existing = await roleRepository.findByCode(maVaiTro, excludeVaiTroId);
   if (existing) {
-    throw new AppError('M� vai tr� � t�n t�i', 409);
+    throw new AppError('Mđ vai trđ đ tđn tđi', 409);
   }
 };
 
@@ -33,7 +33,7 @@ const ensureProtectedRoleUpdateAllowed = (currentRole, payload) => {
     Object.prototype.hasOwnProperty.call(payload, 'ma_vai_tro')
     && String(payload.ma_vai_tro).trim().toUpperCase() !== String(currentRole.ma_vai_tro).trim().toUpperCase()
   ) {
-    throw new AppError('Kh�ng ��c thay �i m� vai tr� h� th�ng', 400);
+    throw new AppError('Khđng đđc thay đi mđ vai trđ hđ thđng', 400);
   }
 };
 
@@ -41,12 +41,12 @@ const ensureCanDeactivateRole = async (currentRole, nextIsActive) => {
   if (Number(nextIsActive) === 1) return;
 
   if (isProtectedRole(currentRole)) {
-    throw new AppError('Kh�ng ��c v� hi�u h�a vai tr� h� th�ng', 400);
+    throw new AppError('Khđng đđc vđ hiđu hđa vai trđ hđ thđng', 400);
   }
 
   const totalUsers = await roleRepository.countUsersByRoleId(currentRole.vai_tro_id);
   if (totalUsers > 0) {
-    throw new AppError('Kh�ng th� v� hi�u h�a vai tr� ang ��c g�n cho ng��i d�ng', 400);
+    throw new AppError('Khđng thđ vđ hiđu hđa vai trđ ang đđc gđn cho ngđđi dđng', 400);
   }
 };
 
@@ -84,7 +84,7 @@ const createRole = async (actor, payload, context = {}) => {
     entity_name: 'vai_tro',
     entity_id: insertedId,
     du_lieu_moi: createdRole,
-    ghi_chu: `T�o vai tr� ${createdRole.ten_vai_tro}`,
+    ghi_chu: `Tđo vai trđ ${createdRole.ten_vai_tro}`,
     ip_address: context.ipAddress,
   });
 
@@ -110,7 +110,7 @@ const updateRole = async (actor, vaiTroId, payload, context = {}) => {
     entity_id: vaiTroId,
     du_lieu_cu: currentRole,
     du_lieu_moi: updatedRole,
-    ghi_chu: `C�p nh�t vai tr� ${updatedRole.ten_vai_tro}`,
+    ghi_chu: `Cđp nhđt vai trđ ${updatedRole.ten_vai_tro}`,
     ip_address: context.ipAddress,
   });
 
@@ -139,7 +139,7 @@ const updateRoleStatus = async (actor, vaiTroId, payload, context = {}) => {
     entity_id: vaiTroId,
     du_lieu_cu: { is_active: currentRole.is_active },
     du_lieu_moi: { is_active: updatedRole.is_active },
-    ghi_chu: `C�p nh�t tr�ng th�i vai tr� ${updatedRole.ten_vai_tro}`,
+    ghi_chu: `Cđp nhđt trạng thái vai trđ ${updatedRole.ten_vai_tro}`,
     ip_address: context.ipAddress,
   });
 

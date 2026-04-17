@@ -23,7 +23,7 @@ const CHI_TIET_SORT_FIELDS = [
 
 const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
-const requireObject = (value, message = 'D� li�u kh�ng h�p l�') => {
+const requireObject = (value, message = 'Dđ liđu khđng hđp lđ') => {
   if (!isObject(value)) {
     throw new AppError(message, 400);
   }
@@ -32,7 +32,7 @@ const requireObject = (value, message = 'D� li�u kh�ng h�p l�') => {
 const assertOnlyAllowedKeys = (payload, allowedFields) => {
   const invalidFields = Object.keys(payload).filter((key) => !allowedFields.includes(key));
   if (invalidFields.length) {
-    throw new AppError(`Kh�ng h� tr� tr��ng: ${invalidFields.join(', ')}`, 400);
+    throw new AppError(`Không hỗ trợ trường: ${invalidFields.join(', ')}`, 400);
   }
 };
 
@@ -49,7 +49,7 @@ const toPositiveInt = (value, fieldName, { allowNull = false } = {}) => {
 
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new AppError(`${fieldName} ph�i l� s� nguy�n d��ng`, 400);
+    throw new AppError(`${fieldName} phải là số nguyên dương`, 400);
   }
 
   return parsed;
@@ -57,15 +57,15 @@ const toPositiveInt = (value, fieldName, { allowNull = false } = {}) => {
 
 const toNonEmptyString = (value, fieldName, maxLength = 255) => {
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} ph�i l� chu�i`, 400);
+    throw new AppError(`${fieldName} phải là chuỗi`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) {
-    throw new AppError(`${fieldName} kh�ng ��c � tr�ng`, 400);
+    throw new AppError(`${fieldName} khđng đđc đ trđng`, 400);
   }
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} v��t qu� � d�i t�i a ${maxLength}`, 400);
+    throw new AppError(`${fieldName} vđđt quđ đ dđi tđi a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -75,13 +75,13 @@ const toNullableString = (value, fieldName, maxLength = 2000) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} ph�i l� chu�i`, 400);
+    throw new AppError(`${fieldName} phải là chuỗi`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
   if (normalized.length > maxLength) {
-    throw new AppError(`${fieldName} v��t qu� � d�i t�i a ${maxLength}`, 400);
+    throw new AppError(`${fieldName} vđđt quđ đ dđi tđi a ${maxLength}`, 400);
   }
 
   return normalized;
@@ -90,18 +90,18 @@ const toNullableString = (value, fieldName, maxLength = 2000) => {
 const toDateTime = (value, fieldName, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
 
   if (value === null || value === '') {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return parsed;
@@ -111,13 +111,13 @@ const toDateOnly = (value, fieldName) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value !== 'string') {
-    throw new AppError(`${fieldName} ph�i theo �nh d�ng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phđi theo đnh dđng YYYY-MM-DD`, 400);
   }
 
   const normalized = value.trim();
   if (!normalized) return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    throw new AppError(`${fieldName} ph�i theo �nh d�ng YYYY-MM-DD`, 400);
+    throw new AppError(`${fieldName} phđi theo đnh dđng YYYY-MM-DD`, 400);
   }
 
   const [year, month, day] = normalized.split('-').map(Number);
@@ -127,7 +127,7 @@ const toDateOnly = (value, fieldName) => {
     || parsed.getUTCMonth() + 1 !== month
     || parsed.getUTCDate() !== day
   ) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return normalized;
@@ -136,18 +136,18 @@ const toDateOnly = (value, fieldName) => {
 const toUpperEnum = (value, fieldName, allowedValues, { required = false } = {}) => {
   if (value === undefined) {
     if (required) {
-      throw new AppError(`${fieldName} l� b�t bu�c`, 400);
+      throw new AppError(`${fieldName} lđ bđt buđc`, 400);
     }
     return undefined;
   }
 
   if (value === null || typeof value !== 'string') {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   const normalized = value.trim().toUpperCase();
   if (!normalized || !allowedValues.includes(normalized)) {
-    throw new AppError(`${fieldName} kh�ng h�p l�`, 400);
+    throw new AppError(`${fieldName} khđng hđp lđ`, 400);
   }
 
   return normalized;
@@ -158,7 +158,7 @@ const parsePagination = (query) => {
   const limit = query.limit === undefined ? 20 : toPositiveInt(query.limit, 'limit');
 
   if (limit > 100) {
-    throw new AppError('limit t�i a l� 100', 400);
+    throw new AppError('limit tđi a lđ 100', 400);
   }
 
   return { page, limit };
@@ -171,10 +171,10 @@ const parseSort = (query, allowedFields, defaultSortBy) => {
     : 'DESC';
 
   if (!allowedFields.includes(sortBy)) {
-    throw new AppError(`sortBy ch� h� tr�: ${allowedFields.join(', ')}`, 400);
+    throw new AppError(`sortBy chđ hđ trđ: ${allowedFields.join(', ')}`, 400);
   }
   if (!SORT_ORDERS.includes(sortOrder)) {
-    throw new AppError('sortOrder ch� h� tr� ASC ho�c DESC', 400);
+    throw new AppError('sortOrder chđ hđ trđ ASC hođc DESC', 400);
   }
 
   return { sortBy, sortOrder };
@@ -182,7 +182,7 @@ const parseSort = (query, allowedFields, defaultSortBy) => {
 
 const phieuKiemKeIdParam = {
   params: (params) => {
-    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    requireObject(params, 'Dđ liđu params khđng hđp lđ');
     return {
       id: toPositiveInt(params.id, 'id'),
     };
@@ -191,7 +191,7 @@ const phieuKiemKeIdParam = {
 
 const phieuAndChiTietIdParam = {
   params: (params) => {
-    requireObject(params, 'D� li�u params kh�ng h�p l�');
+    requireObject(params, 'Dđ liđu params khđng hđp lđ');
     return {
       id: toPositiveInt(params.id, 'id'),
       chi_tiet_id: toPositiveInt(params.chi_tiet_id, 'chi_tiet_id'),
@@ -201,7 +201,7 @@ const phieuAndChiTietIdParam = {
 
 const createPhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, [
       'ten_dot_kiem_ke',
       'loai_pham_vi',
@@ -216,7 +216,7 @@ const createPhieuKiemKe = {
     const donViId = toPositiveInt(body.don_vi_id, 'don_vi_id', { allowNull: true });
 
     if (loaiPhamVi === 'THEO_DON_VI' && !donViId) {
-      throw new AppError('don_vi_id l� b�t bu�c khi loai_pham_vi = THEO_DON_VI', 400);
+      throw new AppError('don_vi_id là bắt buộc khi loai_pham_vi = THEO_DON_VI', 400);
     }
 
     return {
@@ -231,10 +231,10 @@ const createPhieuKiemKe = {
 
 const updatePhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     const allowedFields = ['ten_dot_kiem_ke', 'loai_pham_vi', 'don_vi_id', 'thoi_diem_bat_dau', 'ghi_chu'];
     assertOnlyAllowedKeys(body, allowedFields);
-    ensureAtLeastOneField(body, allowedFields, 'C�n �t nh�t 1 tr��ng � c�p nh�t');
+    ensureAtLeastOneField(body, allowedFields, 'Cđn đt nhđt 1 trđđng đ cập nhật');
 
     const payload = {};
 
@@ -259,7 +259,7 @@ const updatePhieuKiemKe = {
       && Object.prototype.hasOwnProperty.call(payload, 'don_vi_id')
       && !payload.don_vi_id
     ) {
-      throw new AppError('don_vi_id l� b�t bu�c khi loai_pham_vi = THEO_DON_VI', 400);
+      throw new AppError('don_vi_id là bắt buộc khi loai_pham_vi = THEO_DON_VI', 400);
     }
 
     return payload;
@@ -268,7 +268,7 @@ const updatePhieuKiemKe = {
 
 const getPhieuKiemKeListQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, [
       'page',
       'limit',
@@ -288,7 +288,7 @@ const getPhieuKiemKeListQuery = {
     const denNgay = toDateOnly(query.den_ngay, 'den_ngay');
 
     if (tuNgay && denNgay && denNgay < tuNgay) {
-      throw new AppError('den_ngay kh�ng ��c nh� h�n tu_ngay', 400);
+      throw new AppError('den_ngay khđng đđc nhđ hđn tu_ngay', 400);
     }
 
     return {
@@ -308,7 +308,7 @@ const getPhieuKiemKeListQuery = {
 
 const chuyenTrangThaiPhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, ['trang_thai', 'ghi_chu']);
 
     return {
@@ -320,7 +320,7 @@ const chuyenTrangThaiPhieuKiemKe = {
 
 const xacNhanPhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, ['ghi_chu']);
 
     return {
@@ -331,7 +331,7 @@ const xacNhanPhieuKiemKe = {
 
 const huyPhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, ['ly_do', 'ghi_chu']);
 
     return {
@@ -343,7 +343,7 @@ const huyPhieuKiemKe = {
 
 const hoanTatPhieuKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, ['ghi_chu']);
 
     return {
@@ -354,7 +354,7 @@ const hoanTatPhieuKiemKe = {
 
 const getChiTietKiemKeListQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, [
       'page',
       'limit',
@@ -384,7 +384,7 @@ const getChiTietKiemKeListQuery = {
 
 const updateChiTietKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     const allowedFields = [
       'tinh_trang_kiem_ke_id',
       'don_vi_thuc_te_id',
@@ -393,7 +393,7 @@ const updateChiTietKiemKe = {
       'thoi_gian_kiem_ke',
     ];
     assertOnlyAllowedKeys(body, allowedFields);
-    ensureAtLeastOneField(body, allowedFields, 'C�n �t nh�t 1 tr��ng � c�p nh�t');
+    ensureAtLeastOneField(body, allowedFields, 'Cđn đt nhđt 1 trđđng đ cập nhật');
 
     const payload = {};
 
@@ -419,21 +419,21 @@ const updateChiTietKiemKe = {
 
 const bulkUpdateChiTietKiemKe = {
   body: (body) => {
-    requireObject(body, 'Body kh�ng h�p l�');
+    requireObject(body, 'Body khđng hđp lđ');
     assertOnlyAllowedKeys(body, ['items']);
 
     if (!Array.isArray(body.items)) {
-      throw new AppError('items ph�i l� m�ng', 400);
+      throw new AppError('items phđi lđ mđng', 400);
     }
     if (!body.items.length) {
-      throw new AppError('items kh�ng ��c r�ng', 400);
+      throw new AppError('items khđng đđc rđng', 400);
     }
     if (body.items.length > 500) {
-      throw new AppError('S� l��ng items t�i a l� 500', 400);
+      throw new AppError('Số lượng items tđi a lđ 500', 400);
     }
 
     const items = body.items.map((item, index) => {
-      requireObject(item, `items[${index}] kh�ng h�p l�`);
+      requireObject(item, `items[${index}] khđng hđp lđ`);
 
       const allowedFields = [
         'chi_tiet_kiem_ke_id',
@@ -447,7 +447,7 @@ const bulkUpdateChiTietKiemKe = {
       ensureAtLeastOneField(
         item,
         ['tinh_trang_kiem_ke_id', 'don_vi_thuc_te_id', 'ghi_chu', 'nguoi_kiem_ke_id', 'thoi_gian_kiem_ke'],
-        `items[${index}] c�n �t nh�t 1 tr��ng � c�p nh�t`,
+        `items[${index}] cđn đt nhđt 1 trđđng đ cập nhật`,
       );
 
       const normalized = {
@@ -479,7 +479,7 @@ const bulkUpdateChiTietKiemKe = {
 
 const getPhieuKiemKeHistoryQuery = {
   query: (query) => {
-    requireObject(query, 'D� li�u query kh�ng h�p l�');
+    requireObject(query, 'Dđ liđu query khđng hđp lđ');
     assertOnlyAllowedKeys(query, ['page', 'limit']);
     return parsePagination(query);
   },

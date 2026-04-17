@@ -1,15 +1,15 @@
-const { createMasterDataController } = require('./masterData.controllerFactory');
+﻿const { createMasterDataController } = require('./masterData.controllerFactory');
 const loaiThietBiService = require('../services/loaiThietBi.service');
 
 const controller = createMasterDataController({
   service: loaiThietBiService,
   messages: {
-    list: 'L?y danh s?ch loai thi?t b? th?nh c?ng',
-    detail: 'L?y chi ti?t loai thi?t b? th?nh c?ng',
-    create: 'T?o loai thi?t b? th?nh c?ng',
-    update: 'C?p nh?t loai thi?t b? th?nh c?ng',
-    updateStatus: 'C?p nh?t tr?ng th?i loai thi?t b? th?nh c?ng',
-    statusUnchanged: 'Tr?ng th?i loai thi?t b? kh?ng thay ??i',
+    list: 'Lấy danh sách loại thiết bị thành công',
+    detail: 'Lấy chi tiết loại thiết bị thành công',
+    create: 'Tạo loại thiết bị thành công',
+    update: 'Cập nhật loại thiết bị thành công',
+    updateStatus: 'Cập nhật trạng thái loại thiết bị thành công',
+    statusUnchanged: 'Trạng thái loại thiết bị không thay đổi',
   },
 });
 
@@ -20,5 +20,6 @@ module.exports = {
   updateLoaiThietBi: controller.update,
   updateLoaiThietBiStatus: controller.updateStatus,
 };
+
 
 

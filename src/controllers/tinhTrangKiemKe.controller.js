@@ -1,15 +1,15 @@
-const { createMasterDataController } = require('./masterData.controllerFactory');
+﻿const { createMasterDataController } = require('./masterData.controllerFactory');
 const tinhTrangKiemKeService = require('../services/tinhTrangKiemKe.service');
 
 const controller = createMasterDataController({
   service: tinhTrangKiemKeService,
   messages: {
-    list: 'L?y danh s?ch t?nh tr?ng ki?m k? th?nh c?ng',
-    detail: 'L?y chi ti?t t?nh tr?ng ki?m k? th?nh c?ng',
-    create: 'T?o t?nh tr?ng ki?m k? th?nh c?ng',
-    update: 'C?p nh?t t?nh tr?ng ki?m k? th?nh c?ng',
-    updateStatus: 'C?p nh?t tr?ng th?i t?nh tr?ng ki?m k? th?nh c?ng',
-    statusUnchanged: 'Tr?ng th?i t?nh tr?ng ki?m k? kh?ng thay ??i',
+    list: 'Lấy danh sách tình trạng kiểm kê thành công',
+    detail: 'Lấy chi tiết tình trạng kiểm kê thành công',
+    create: 'Tạo tình trạng kiểm kê thành công',
+    update: 'Cập nhật tình trạng kiểm kê thành công',
+    updateStatus: 'Cập nhật trạng thái tình trạng kiểm kê thành công',
+    statusUnchanged: 'Trạng thái tình trạng kiểm kê không thay đổi',
   },
 });
 
@@ -20,5 +20,6 @@ module.exports = {
   updateTinhTrangKiemKe: controller.update,
   updateTinhTrangKiemKeStatus: controller.updateStatus,
 };
+
 
 
