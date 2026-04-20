@@ -1,6 +1,6 @@
 const { pool } = require('../configs/db.config');
 
-const createAuditLog = async (payload) => {
+const create = async (payload) => {
   const sql = `
     INSERT INTO nhat_ky_he_thong (
       nguoi_dung_id,
@@ -33,5 +33,6 @@ const createAuditLog = async (payload) => {
 };
 
 module.exports = {
-  createAuditLog,
+  create,
+  createAuditLog: create,
 };

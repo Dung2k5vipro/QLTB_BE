@@ -149,7 +149,7 @@ const changePassword = async (nguoiDungId, payload, context = {}) => {
 
   const matchedCurrentPassword = await bcrypt.compare(payload.mat_khau_hien_tai, user.mat_khau_hash || '');
   if (!matchedCurrentPassword) {
-    throw new AppError('mat_khau_hien_tai khong dung', 400);
+    throw new AppError('Mật khẩu hiện tại không đúng', 400);
   }
 
   const matchedOldPassword = await bcrypt.compare(payload.mat_khau_moi, user.mat_khau_hash || '');

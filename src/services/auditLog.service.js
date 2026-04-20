@@ -11,9 +11,23 @@ const safeSerialize = (value) => {
   }
 };
 
+const resolveCreateAuditLog = () => {
+  if (typeof auditLogRepository.create === 'function') {
+    return auditLogRepository.create;
+  }
+
+  if (typeof auditLogRepository.createAuditLog === 'function') {
+    return auditLogRepository.createAuditLog;
+  }
+
+  throw new Error('Audit log repository chưa triển khai hàm create');
+};
+
 const writeAuditLog = async (payload = {}) => {
   try {
-    await auditLogRepository.create({
+    const createAuditLog = resolveCreateAuditLog();
+
+    await createAuditLog({
       nguoi_dung_id: payload.nguoi_dung_id ?? null,
       module: payload.module ?? null,
       hanh_dong: payload.hanh_dong ?? null,
