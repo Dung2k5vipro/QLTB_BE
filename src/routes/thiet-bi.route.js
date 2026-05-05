@@ -69,6 +69,14 @@ router.get(
   thietBiController.getDeviceById,
 );
 
+router.get(
+  '/:id/chi-phi-sua-chua',
+  authorizeRoles(...READ_ROLES),
+  validate(thietBiValidation.getDeviceById),
+  thietBiController.getDeviceRepairCost,
+);
+
+
 router.patch(
   '/:id',
   authorizeRoles(...WRITE_ROLES),

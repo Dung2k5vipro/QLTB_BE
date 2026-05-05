@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const { writeAuditLog } = require('./auditLog.service');
 const thietBiRepository = require('../repositories/thietBi.repository');
+const baoTriRepository = require('../repositories/baoTri.repository');
 const { generateNextAssetCode } = require('../utils/codeGenerator');
 
 const MODULE_NAME = 'THIET_BI';
@@ -296,7 +297,7 @@ const mapDuplicateDatabaseError = (error) => {
     return new AppError('so_serial đ tđn tđi', 409);
   }
   if (duplicateField === 'ma_tai_san') {
-    return new AppError('Khđng thđ tđo ma_tai_san duy nhđt, vui lđng thđ lđi', 409);
+    return new AppError('M\u00e3 t\u00e0i s\u1ea3n \u0111\u00e3 t\u1ed3n t\u1ea1i', 409);
   }
 
   return new AppError('Dđ liđu bđ trđng vđi bđn ghi khđc', 409);
@@ -315,7 +316,7 @@ const createDeviceOnce = async (actor, payload, context = {}) => {
       ngayHetBaoHanh: payload.ngay_het_bao_hanh,
     });
 
-    const maTaiSan = await generateNextAssetCode({
+    const maTaiSan = payload.ma_tai_san || await generateNextAssetCode({
       connection,
       maVietTat: loaiThietBi.ma_viet_tat,
     });
@@ -363,19 +364,23 @@ const createDeviceOnce = async (actor, payload, context = {}) => {
 
 const createDevice = async (actor, payload, context = {}) => {
   let lastError = null;
+  const shouldAutoGenerateAssetCode = !payload.ma_tai_san;
 
   for (let attempt = 1; attempt <= MAX_CREATE_RETRIES; attempt += 1) {
     try {
       return await createDeviceOnce(actor, payload, context);
     } catch (error) {
       const mappedError = mapDuplicateDatabaseError(error);
-      if (mappedError && getDuplicateFieldName(error) === 'so_serial') {
+      const duplicateField = getDuplicateFieldName(error);
+
+      if (mappedError && duplicateField === 'so_serial') {
         throw mappedError;
       }
 
       if (
         mappedError
-        && getDuplicateFieldName(error) === 'ma_tai_san'
+        && duplicateField === 'ma_tai_san'
+        && shouldAutoGenerateAssetCode
         && attempt < MAX_CREATE_RETRIES
       ) {
         lastError = mappedError;
@@ -412,13 +417,13 @@ const getDeviceById = async (thietBiId) => {
     throw new AppError('Khđng tđm thđy thiđt bđ', 404);
   }
 
+  const repairCostInfo = await baoTriRepository.getTotalRepairCostByDeviceId(thietBiId);
+  device.tong_chi_phi_sua_chua = repairCostInfo.tong_chi_phi_sua_chua;
+
   return device;
 };
 
 const updateDevice = async (actor, thietBiId, payload, context = {}) => {
-  if (Object.prototype.hasOwnProperty.call(payload, 'ma_tai_san')) {
-    throw new AppError('Khđng đđc cập nhật ma_tai_san', 400);
-  }
   if (Object.prototype.hasOwnProperty.call(payload, 'trang_thai_thiet_bi_id')) {
     throw new AppError('Khđng đđc cập nhật trang_thai_thiet_bi_id đ API nđy', 400);
   }
@@ -715,6 +720,11 @@ const getDeviceStatusHistory = async (thietBiId) => {
   return thietBiRepository.findStatusHistoryByDeviceId(thietBiId);
 };
 
+const getDeviceRepairCost = async (thietBiId) => {
+  await ensureDeviceExists(thietBiId);
+  return baoTriRepository.getTotalRepairCostByDeviceId(thietBiId);
+};
+
 module.exports = {
   createDevice,
   getDevices,
@@ -727,7 +737,7 @@ module.exports = {
   thuHoiThietBi,
   getTransferHistory,
   getDeviceStatusHistory,
+  getDeviceRepairCost,
 };
-
 
 

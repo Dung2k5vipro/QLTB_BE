@@ -10,6 +10,7 @@ const ALLOWED_SORT_FIELDS = [
 ];
 const ALLOWED_SORT_ORDERS = ['ASC', 'DESC'];
 const ALLOWED_TRANSFER_TYPES = ['CAP_PHAT', 'BAN_GIAO', 'DIEU_CHUYEN', 'THU_HOI'];
+const ASSET_CODE_PATTERN = /^TB-[A-Z0-9]+-[0-9]{4}$/;
 
 const isObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
@@ -60,6 +61,38 @@ const toNullableString = (value, fieldName, maxLength = 1000) => {
   if (!normalized) return null;
   if (normalized.length > maxLength) {
     throw new AppError(`${fieldName} vÆ°á»£t quÃ¡ Ä‘á»™ dÃ i tá»‘i Ä‘a ${maxLength}`, 400);
+  }
+
+  return normalized;
+};
+
+const toAssetCode = (value, fieldName, { required = false } = {}) => {
+  if (value === undefined) {
+    if (required) {
+      throw new AppError(`${fieldName} là bắt buộc`, 400);
+    }
+    return undefined;
+  }
+
+  if (value === null || typeof value !== 'string') {
+    throw new AppError(`${fieldName} phải là chuỗi`, 400);
+  }
+
+  const normalized = value.trim().toUpperCase();
+
+  if (!normalized) {
+    if (required) {
+      throw new AppError(`${fieldName} là bắt buộc`, 400);
+    }
+    return undefined;
+  }
+
+  if (normalized.length > 50) {
+    throw new AppError(`${fieldName} vượt quá độ dài tối đa 50`, 400);
+  }
+
+  if (!ASSET_CODE_PATTERN.test(normalized)) {
+    throw new AppError(`${fieldName} không đúng định dạng`, 400);
   }
 
   return normalized;
@@ -371,6 +404,7 @@ const createDevice = {
     requireObject(body, 'Body khÃ´ng há»£p lá»‡');
 
     const allowedFields = [
+      'ma_tai_san',
       'ten_thiet_bi',
       'loai_thiet_bi_id',
       'hang_san_xuat_id',
@@ -389,6 +423,7 @@ const createDevice = {
     assertOnlyAllowedKeys(body, allowedFields);
 
     const payload = {
+      ma_tai_san: toAssetCode(body.ma_tai_san, 'ma_tai_san'),
       ten_thiet_bi: toNonEmptyString(body.ten_thiet_bi, 'ten_thiet_bi', 255),
       loai_thiet_bi_id: toPositiveInt(body.loai_thiet_bi_id, 'loai_thiet_bi_id'),
       hang_san_xuat_id: toPositiveInt(body.hang_san_xuat_id, 'hang_san_xuat_id', { allowNull: true }),
@@ -424,6 +459,7 @@ const updateDevice = {
     requireObject(body, 'Body khÃ´ng há»£p lá»‡');
 
     const allowedFields = [
+      'ma_tai_san',
       'ten_thiet_bi',
       'loai_thiet_bi_id',
       'hang_san_xuat_id',
@@ -443,6 +479,9 @@ const updateDevice = {
 
     const payload = {};
 
+    if (Object.prototype.hasOwnProperty.call(body, 'ma_tai_san')) {
+      payload.ma_tai_san = toAssetCode(body.ma_tai_san, 'ma_tai_san');
+    }
     if (Object.prototype.hasOwnProperty.call(body, 'ten_thiet_bi')) {
       payload.ten_thiet_bi = toNonEmptyString(body.ten_thiet_bi, 'ten_thiet_bi', 255);
     }

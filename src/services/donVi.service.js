@@ -1,7 +1,15 @@
 const donViRepository = require('../repositories/donVi.repository');
 const AppError = require('../utils/appError');
 const { writeAuditLog } = require('./auditLog.service');
+const { pool } = require('../configs/db.config');
 
+const generateCode = (prefix, lastCode) => {
+  if (!lastCode) return prefix + '001';
+  const number = parseInt(lastCode.replace(prefix, ''), 10);
+  if (isNaN(number)) return prefix + '001';
+  const next = number + 1;
+  return prefix + next.toString().padStart(3, '0');
+};
 const ensureDonViExists = async (donViId) => {
   const donVi = await donViRepository.findById(donViId);
   if (!donVi) {
@@ -79,6 +87,10 @@ const getDonViById = async (donViId) => {
 };
 
 const createDonVi = async (actor, payload, context = {}) => {
+  const [rows] = await pool.query('SELECT ma_don_vi FROM don_vi ORDER BY don_vi_id DESC LIMIT 1');
+  const lastCode = rows[0]?.ma_don_vi;
+  payload.ma_don_vi = generateCode('DV', lastCode);
+
   await ensureMaDonViUnique(payload.ma_don_vi);
   await ensureParentValid({ parentId: payload.parent_id });
 

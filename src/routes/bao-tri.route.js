@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const authMiddleware = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
 const { authorizeRoles } = require('../middlewares/role.middleware');
@@ -42,7 +42,23 @@ router.get(
 );
 
 router.get(
+  '/lich-su/:thietBiId',
+  authorizeRoles(...READ_ROLES),
+  validate(baoTriValidation.thietBiIdParam),
+  validate(baoTriValidation.getLichSuTheoThietBiQuery),
+  baoTriController.getLichSuBaoTriTheoThietBi,
+);
+
+router.get(
   '/phieu-bao-hong/:phieuBaoHongId',
+  authorizeRoles(...READ_ROLES),
+  validate(baoTriValidation.phieuBaoHongIdParam),
+  validate(baoTriValidation.getDanhSachTheoPhieuBaoHongQuery),
+  baoTriController.getDanhSachBaoTriTheoPhieuBaoHong,
+);
+
+router.get(
+  '/by-phieu/:phieuBaoHongId',
   authorizeRoles(...READ_ROLES),
   validate(baoTriValidation.phieuBaoHongIdParam),
   validate(baoTriValidation.getDanhSachTheoPhieuBaoHongQuery),

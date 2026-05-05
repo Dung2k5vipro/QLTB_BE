@@ -1,3 +1,5 @@
+﻿const { repairUtf8Mojibake, deepRepairUtf8 } = require('../utils/text');
+
 const validateMiddleware = (schema = {}) => {
   return (req, res, next) => {
     try {
@@ -32,8 +34,8 @@ const validateMiddleware = (schema = {}) => {
     } catch (error) {
       return res.status(error.statusCode || 400).json({
         success: false,
-        message: error.message || 'Dữ liệu yêu cầu không hợp lệ',
-        details: error.details || undefined,
+        message: repairUtf8Mojibake(error?.message || 'Dữ liệu yêu cầu không hợp lệ'),
+        details: deepRepairUtf8(error?.details) || undefined,
       });
     }
   };

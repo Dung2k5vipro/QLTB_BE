@@ -1,4 +1,4 @@
-﻿const asyncHandler = require('../utils/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
 const { sendSuccess } = require('../utils/response');
 const { getRequestIp } = require('../utils/request');
 const thietBiService = require('../services/thietBi.service');
@@ -31,6 +31,16 @@ const getDeviceById = asyncHandler(async (req, res) => {
   return sendSuccess(res, {
     message: 'Lấy chi tiết thiết bị thành công',
     data: device,
+  });
+});
+
+const getDeviceRepairCost = asyncHandler(async (req, res) => {
+  console.log('[DEBUG] GET chi-phi-sua-chua - req.params.id nhận từ FE:', req.params.id, '(type:', typeof req.params.id, ')');
+  const repairCost = await thietBiService.getDeviceRepairCost(req.params.id);
+
+  return sendSuccess(res, {
+    message: 'Lấy tổng chi phí sửa chữa thành công',
+    data: repairCost,
   });
 });
 
@@ -131,6 +141,7 @@ module.exports = {
   thuHoiThietBi,
   getTransferHistory,
   getDeviceStatusHistory,
+  getDeviceRepairCost,
 };
 
 

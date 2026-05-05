@@ -407,6 +407,7 @@ const createDevice = async (payload, { connection } = {}) => {
 const updateDeviceById = async (thietBiId, payload, { connection } = {}) => {
   const executor = resolveExecutor(connection);
   const fieldMap = {
+    ma_tai_san: 'ma_tai_san',
     ten_thiet_bi: 'ten_thiet_bi',
     loai_thiet_bi_id: 'loai_thiet_bi_id',
     hang_san_xuat_id: 'hang_san_xuat_id',

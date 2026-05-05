@@ -10,6 +10,7 @@ const SORT_COLUMN_MAP = {
 
 const BASE_SELECT_FIELDS = `
   dv.don_vi_id,
+  dv.don_vi_id AS id,
   dv.ma_don_vi,
   dv.ten_don_vi,
   dv.loai_don_vi,
@@ -57,6 +58,7 @@ const findOptions = async (filters = {}) => {
   const sql = `
     SELECT
       dv.don_vi_id,
+      dv.don_vi_id AS id,
       dv.ma_don_vi,
       dv.ten_don_vi,
       dv.loai_don_vi,

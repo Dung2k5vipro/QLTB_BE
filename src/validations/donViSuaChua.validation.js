@@ -1,9 +1,11 @@
+const AppError = require('../utils/appError');
 const {
   requireObject,
   assertOnlyAllowedKeys,
   ensureAtLeastOneField,
   toNonEmptyString,
   toNullableString,
+  toIsActiveFlag,
   toEmail,
   toPhone,
   parseCommonListQuery,
@@ -20,8 +22,17 @@ const ALLOWED_CREATE_FIELDS = [
   'email',
   'dia_chi',
   'ghi_chu',
+  'is_active',
 ];
-const ALLOWED_UPDATE_FIELDS = [...ALLOWED_CREATE_FIELDS];
+const ALLOWED_UPDATE_FIELDS = [
+  'ma_dvsc',
+  'ten_dvsc',
+  'nguoi_lien_he',
+  'so_dien_thoai',
+  'email',
+  'dia_chi',
+  'ghi_chu',
+];
 
 const donViSuaChuaIdParam = buildIdParamValidator('id');
 
@@ -38,6 +49,12 @@ const createDonViSuaChua = {
   body: (body) => {
     requireObject(body, 'Body không hợp lệ');
     assertOnlyAllowedKeys(body, ALLOWED_CREATE_FIELDS);
+    if (!Object.prototype.hasOwnProperty.call(body, 'ma_dvsc')) {
+      throw new AppError('ma_dvsc là bắt buộc', 400);
+    }
+    if (!Object.prototype.hasOwnProperty.call(body, 'ten_dvsc')) {
+      throw new AppError('ten_dvsc là bắt buộc', 400);
+    }
 
     return {
       ma_dvsc: toNonEmptyString(body.ma_dvsc, 'ma_dvsc', 50, { toUpperCase: true }),
@@ -47,7 +64,7 @@ const createDonViSuaChua = {
       email: toEmail(body.email, 'email'),
       dia_chi: toNullableString(body.dia_chi, 'dia_chi', 255),
       ghi_chu: toNullableString(body.ghi_chu, 'ghi_chu', 255),
-      is_active: 1,
+      is_active: body.is_active !== undefined ? toIsActiveFlag(body.is_active) : 1,
     };
   },
 };
@@ -95,4 +112,3 @@ module.exports = {
   updateDonViSuaChua,
   updateDonViSuaChuaStatus,
 };
-

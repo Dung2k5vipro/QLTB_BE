@@ -14,6 +14,7 @@ module.exports = createMasterDataRepository({
   ],
   listFields: [
     'don_vi_sua_chua_id',
+    'don_vi_sua_chua_id AS id',
     'ma_dvsc',
     'ten_dvsc',
     'nguoi_lien_he',
@@ -27,6 +28,7 @@ module.exports = createMasterDataRepository({
   ],
   detailFields: [
     'don_vi_sua_chua_id',
+    'don_vi_sua_chua_id AS id',
     'ma_dvsc',
     'ten_dvsc',
     'nguoi_lien_he',

@@ -97,16 +97,14 @@ const getDonViOptionsQuery = {
 const createDonVi = {
   body: (body) => {
     requireObject(body, 'Body không hợp lệ');
-    assertOnlyAllowedKeys(body, ALLOWED_CREATE_FIELDS);
 
     return {
-      ma_don_vi: toNonEmptyString(body.ma_don_vi, 'ma_don_vi', 50, { toUpperCase: true }),
       ten_don_vi: toNonEmptyString(body.ten_don_vi, 'ten_don_vi', 255),
       loai_don_vi: toLoaiDonVi(body.loai_don_vi),
       parent_id: toParentId(body.parent_id),
       dia_diem: toNullableString(body.dia_diem, 'dia_diem', 255),
       mo_ta: toNullableString(body.mo_ta, 'mo_ta', 255),
-      is_active: 1,
+      is_active: body.is_active !== undefined ? toIsActiveFlag(body.is_active) : 1,
     };
   },
 };
@@ -114,14 +112,9 @@ const createDonVi = {
 const updateDonVi = {
   body: (body) => {
     requireObject(body, 'Body không hợp lệ');
-    assertOnlyAllowedKeys(body, ALLOWED_UPDATE_FIELDS);
-    ensureAtLeastOneField(body, ALLOWED_UPDATE_FIELDS, 'Cần ít nhất 1 trường để cập nhật');
 
     const payload = {};
 
-    if (Object.prototype.hasOwnProperty.call(body, 'ma_don_vi')) {
-      payload.ma_don_vi = toNonEmptyString(body.ma_don_vi, 'ma_don_vi', 50, { toUpperCase: true });
-    }
     if (Object.prototype.hasOwnProperty.call(body, 'ten_don_vi')) {
       payload.ten_don_vi = toNonEmptyString(body.ten_don_vi, 'ten_don_vi', 255);
     }
@@ -136,6 +129,13 @@ const updateDonVi = {
     }
     if (Object.prototype.hasOwnProperty.call(body, 'mo_ta')) {
       payload.mo_ta = toNullableString(body.mo_ta, 'mo_ta', 255);
+    }
+    if (Object.prototype.hasOwnProperty.call(body, 'is_active')) {
+      payload.is_active = toIsActiveFlag(body.is_active);
+    }
+
+    if (Object.keys(payload).length === 0) {
+      throw new AppError('Cần ít nhất 1 trường hợp lệ để cập nhật', 400);
     }
 
     return payload;

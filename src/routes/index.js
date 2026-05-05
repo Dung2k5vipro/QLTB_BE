@@ -21,6 +21,7 @@ const baoHongRoute = require('./bao-hong.route');
 const dashboardRoute = require('./dashboard.route');
 const baoCaoRoute = require('./bao-cao.route');
 const nhatKyHeThongRoute = require('./nhat-ky-he-thong.route');
+const debugRoute = require('./debug.route');
 
 const router = express.Router();
 
@@ -46,5 +47,7 @@ router.use('/bao-hong', baoHongRoute);
 router.use('/dashboard', dashboardRoute);
 router.use('/bao-cao', baoCaoRoute);
 router.use('/nhat-ky-he-thong', nhatKyHeThongRoute);
+router.use('/debug', debugRoute);
 
 module.exports = router;
+

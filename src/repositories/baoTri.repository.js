@@ -431,6 +431,41 @@ const createSystemLog = async (payload, { connection } = {}) => {
   return Number(result.insertId);
 };
 
+const getTotalRepairCostByDeviceId = async (thietBiId, { connection } = {}) => {
+  const executor = resolveExecutor(connection);
+  const sql = `
+    SELECT
+      thiet_bi_id,
+      COALESCE(SUM(chi_phi), 0) AS tong_chi_phi_sua_chua
+    FROM nhat_ky_bao_tri
+    WHERE thiet_bi_id = ?
+    GROUP BY thiet_bi_id
+  `;
+
+  console.log('[DEBUG] getTotalRepairCostByDeviceId - thiet_bi_id nhận vào:', thietBiId, '(type:', typeof thietBiId, ')');
+  console.log('[DEBUG] SQL:', sql.replace(/\s+/g, ' ').trim());
+  console.log('[DEBUG] Params:', [thietBiId]);
+
+  const [rows] = await executor.query(sql, [thietBiId]);
+
+  console.log('[DEBUG] Kết quả query rows:', JSON.stringify(rows));
+
+  if (!rows[0]) {
+    console.log('[DEBUG] Không tìm thấy bản ghi → trả về 0');
+    return {
+      thiet_bi_id: Number(thietBiId),
+      tong_chi_phi_sua_chua: 0,
+    };
+  }
+
+  const result = {
+    thiet_bi_id: Number(rows[0].thiet_bi_id),
+    tong_chi_phi_sua_chua: Number(rows[0].tong_chi_phi_sua_chua),
+  };
+  console.log('[DEBUG] Kết quả trả về:', JSON.stringify(result));
+  return result;
+};
+
 module.exports = {
   getConnection,
   findThietBiById,
@@ -448,5 +483,6 @@ module.exports = {
   updateThietBiTrangThai,
   createDeviceStatusHistory,
   createSystemLog,
+  getTotalRepairCostByDeviceId,
 };
 
